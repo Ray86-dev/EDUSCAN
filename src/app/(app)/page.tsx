@@ -1,11 +1,35 @@
-export default function DashboardPage() {
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { checkDailyLimit } from "@/lib/usage";
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  const userName = user?.user_metadata?.full_name?.split(" ")[0] || "docente";
+
+  // Uso diario
+  const usage = user ? await checkDailyLimit(supabase, user.id) : { used: 0, limit: 2, allowed: true };
+
+  // Correcciones recientes
+  const { data: recentCorrections } = await supabase
+    .from("corrections")
+    .select("id, grade, grade_label, created_at, is_reviewed")
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  // Total de correcciones
+  const { count: totalCorrections } = await supabase
+    .from("corrections")
+    .select("*", { count: "exact", head: true });
+
   return (
     <div className="max-w-6xl mx-auto w-full px-6 py-10">
       {/* Welcome Section */}
       <section className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
         <div className="md:col-span-8">
           <p className="text-primary font-medium mb-2 tracking-wide text-sm">
-            BIENVENIDO DE NUEVO
+            BIENVENIDO DE NUEVO, {userName.toUpperCase()}
           </p>
           <h2 className="text-5xl md:text-6xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">
             Tu espacio de <br />
@@ -15,8 +39,10 @@ export default function DashboardPage() {
         <div className="md:col-span-4 pb-2">
           <div className="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary shadow-sm">
             <p className="text-sm text-on-surface-variant leading-relaxed">
-              Hoy tienes 12 exámenes pendientes por corregir. El ambiente está
-              tranquilo para empezar.
+              Has utilizado <strong>{usage.used} de {usage.limit === Infinity ? "∞" : usage.limit}</strong> correcciones hoy.
+              {usage.allowed
+                ? " El ambiente está tranquilo para empezar."
+                : " Has alcanzado el límite diario."}
             </p>
           </div>
         </div>
@@ -24,74 +50,133 @@ export default function DashboardPage() {
 
       {/* Bento Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left: Exams to grade */}
+        {/* Left: Recent corrections + CTA */}
         <div className="lg:col-span-2 space-y-8">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-headline font-bold text-on-surface">
-              Exámenes por corregir
+              Correcciones recientes
             </h3>
-            <button className="text-primary text-sm font-semibold hover:underline">
-              Ver todos
-            </button>
+            <Link href="/resultados" className="text-primary text-sm font-semibold hover:underline">
+              Ver todas
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Exam Card 1 */}
-            <ExamCard
-              title="Biología - Genética"
-              group="4º ESO B"
-              groupColor="primary"
-              progress={72}
-              current={18}
-              total={25}
-            />
-            {/* Exam Card 2 */}
-            <ExamCard
-              title="Lengua Castellana"
-              group="3º ESO C"
-              groupColor="secondary"
-              progress={5}
-              current={0}
-              total={30}
-              label="Listo para calificar"
-              accentColor="tertiary"
-            />
-
-            {/* Zen Mode Card */}
-            <div className="md:col-span-2 group bg-surface-container-lowest p-6 rounded-xl transition-all hover:bg-surface-container hover:shadow-xl flex flex-col md:flex-row gap-6 items-center">
-              <div className="h-24 w-24 bg-primary-container rounded-xl flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-on-primary-container text-4xl">
-                  auto_awesome
-                </span>
-              </div>
-              <div className="flex-1 text-center md:text-left">
-                <h4 className="font-headline font-bold text-xl mb-1">
-                  Modo Enfoque
-                </h4>
-                <p className="text-sm text-on-surface-variant mb-4">
-                  Elimina distracciones y concéntrate en la corrección.
-                </p>
-                <button className="px-6 py-2 bg-primary text-on-primary rounded-full text-sm font-semibold hover:bg-primary/90 transition-colors min-h-[44px]">
-                  Activar Zen Mode
-                </button>
-              </div>
+          {recentCorrections && recentCorrections.length > 0 ? (
+            <div className="space-y-3">
+              {recentCorrections.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/resultados/${c.id}`}
+                  className="flex items-center justify-between bg-surface-container-lowest p-5 rounded-xl hover:bg-surface-container transition-all group relative overflow-hidden"
+                >
+                  <div className={`absolute top-0 left-0 w-1 h-full ${
+                    c.grade >= 5 ? "bg-primary" : "bg-error"
+                  }`} />
+                  <div className="flex items-center gap-4 pl-3">
+                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                      c.grade >= 5 ? "bg-primary-fixed" : "bg-error-container"
+                    }`}>
+                      <span className={`font-headline font-bold text-lg ${
+                        c.grade >= 5 ? "text-primary" : "text-error"
+                      }`}>
+                        {c.grade?.toFixed(1)}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{c.grade_label}</p>
+                      <p className="text-xs text-on-surface-variant">
+                        {new Date(c.created_at).toLocaleDateString("es-ES", {
+                          day: "numeric",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {c.is_reviewed && (
+                      <span className="text-xs font-medium px-2 py-1 bg-primary-fixed text-on-primary-fixed rounded-full">
+                        Revisado
+                      </span>
+                    )}
+                    <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors">
+                      arrow_forward_ios
+                    </span>
+                  </div>
+                </Link>
+              ))}
             </div>
-          </div>
+          ) : (
+            <div className="bg-surface-container-lowest p-8 rounded-xl text-center">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3 block">
+                grading
+              </span>
+              <p className="text-on-surface-variant text-sm">
+                Aún no has realizado ninguna corrección.
+              </p>
+            </div>
+          )}
+
+          {/* CTA Corregir */}
+          <Link
+            href="/corregir"
+            className="flex items-center gap-6 bg-surface-container-lowest p-6 rounded-xl transition-all hover:bg-surface-container hover:shadow-xl group"
+          >
+            <div className="h-20 w-20 bg-primary-container rounded-xl flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-on-primary-container text-4xl">
+                add_a_photo
+              </span>
+            </div>
+            <div className="flex-1">
+              <h4 className="font-headline font-bold text-xl mb-1">
+                Nueva corrección
+              </h4>
+              <p className="text-sm text-on-surface-variant">
+                Sube una foto de un examen manuscrito y obtén la corrección en segundos.
+              </p>
+            </div>
+            <span className="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors text-3xl">
+              arrow_forward
+            </span>
+          </Link>
         </div>
 
-        {/* Right: Schedule */}
+        {/* Right: Stats */}
         <div className="space-y-8">
           <h3 className="text-2xl font-headline font-bold text-on-surface">
-            Próximas fechas
+            Resumen
           </h3>
-          <div className="bg-surface-container-low rounded-2xl p-6 space-y-6">
-            <DateItem month="Mar" day={18} title="Cierre de Actas Trimestrales" subtitle="Secretaría del centro" />
-            <DateItem month="Mar" day={22} title="Examen Final: Biología" subtitle="Aula 204 · 09:00" />
-            <DateItem month="Abr" day={2} title="Reunión de Departamento" subtitle="Virtual · Meet" />
 
-            <button className="w-full py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold text-sm hover:bg-secondary-container/80 transition-colors mt-4 min-h-[44px]">
-              Añadir Recordatorio
-            </button>
+          <div className="bg-surface-container-low rounded-2xl p-6 space-y-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-primary-fixed rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-primary">grading</span>
+              </div>
+              <div>
+                <p className="text-2xl font-headline font-extrabold">{totalCorrections || 0}</p>
+                <p className="text-xs text-on-surface-variant">Correcciones totales</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-secondary-fixed rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-secondary">today</span>
+              </div>
+              <div>
+                <p className="text-2xl font-headline font-extrabold">
+                  {usage.used} / {usage.limit === Infinity ? "∞" : usage.limit}
+                </p>
+                <p className="text-xs text-on-surface-variant">Correcciones hoy</p>
+              </div>
+            </div>
+
+            <Link
+              href="/corregir"
+              className="block w-full py-3 bg-primary text-on-primary rounded-xl font-bold text-sm text-center hover:bg-primary/90 transition-colors min-h-[44px]"
+            >
+              Corregir examen
+            </Link>
           </div>
 
           {/* Quote */}
@@ -103,93 +188,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function ExamCard({
-  title,
-  group,
-  groupColor = "primary",
-  progress,
-  current,
-  total,
-  label = "Progreso",
-  accentColor = "primary",
-}: {
-  title: string;
-  group: string;
-  groupColor?: string;
-  progress: number;
-  current: number;
-  total: number;
-  label?: string;
-  accentColor?: string;
-}) {
-  const accentClasses: Record<string, string> = {
-    primary: "bg-primary",
-    tertiary: "bg-tertiary",
-    secondary: "bg-secondary",
-  };
-  const tagClasses: Record<string, string> = {
-    primary: "bg-primary-fixed text-on-primary-fixed",
-    secondary: "bg-secondary-fixed text-on-secondary-fixed",
-    tertiary: "bg-tertiary-fixed text-on-tertiary-fixed",
-  };
-
-  return (
-    <div className="group bg-surface-container-lowest p-6 rounded-xl transition-all hover:bg-surface-container hover:shadow-xl relative overflow-hidden">
-      <div className={`absolute top-0 left-0 w-1 h-full ${accentClasses[accentColor]}`} />
-      <div className="flex justify-between items-start mb-6">
-        <div>
-          <h4 className="font-headline font-bold text-lg mb-1">{title}</h4>
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${tagClasses[groupColor]}`}>
-            {group}
-          </span>
-        </div>
-        <span className="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors">
-          grading
-        </span>
-      </div>
-      <div className="space-y-4">
-        <div className="flex justify-between text-xs text-on-surface-variant">
-          <span>{label}</span>
-          <span className="font-bold">
-            {current} / {total}
-          </span>
-        </div>
-        <div className="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
-          <div
-            className={`h-full rounded-full ${accentClasses[accentColor]}`}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function DateItem({
-  month,
-  day,
-  title,
-  subtitle,
-}: {
-  month: string;
-  day: number;
-  title: string;
-  subtitle: string;
-}) {
-  return (
-    <div className="flex gap-4">
-      <div className="w-12 h-12 bg-surface-container-lowest rounded-lg flex flex-col items-center justify-center shrink-0 shadow-sm">
-        <span className="text-[10px] font-bold text-primary uppercase">{month}</span>
-        <span className="text-xl font-headline font-extrabold leading-none">{day}</span>
-      </div>
-      <div>
-        <h5 className="font-bold text-sm">{title}</h5>
-        <p className="text-xs text-on-surface-variant">{subtitle}</p>
       </div>
     </div>
   );
