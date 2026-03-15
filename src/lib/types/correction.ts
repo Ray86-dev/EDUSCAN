@@ -35,6 +35,13 @@ export interface CorrectionResult {
   }[];
 }
 
+export interface PerQuestionGrade {
+  question_number: number;
+  grade: number;
+  max_grade: number;
+  reasoning: string;
+}
+
 export interface CorrectionRow {
   id: string;
   user_id: string;
@@ -48,8 +55,10 @@ export interface CorrectionRow {
   ai_feedback: AIFeedback;
   ai_confidence: AIConfidence;
   ai_flags: string[];
+  per_question_grades: PerQuestionGrade[] | null;
   criteria_referenced: unknown;
   is_reviewed: boolean;
+  teacher_modified: boolean;
   gemini_raw_response: string | null;
   created_at: string;
   updated_at: string;

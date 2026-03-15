@@ -1,7 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface TopAppBarProps {
   title?: string;
@@ -9,15 +8,6 @@ interface TopAppBarProps {
 }
 
 export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProps) {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/login");
-    router.refresh();
-  };
-
   // Obtener iniciales del nombre
   const initials = userName
     ? userName
@@ -29,7 +19,7 @@ export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProp
     : "?";
 
   return (
-    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div className="w-9 h-9 bg-primary-container rounded-full flex items-center justify-center">
           <span className="material-symbols-outlined text-on-primary-container text-lg">
@@ -39,15 +29,15 @@ export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProp
         <h1 className="text-xl font-headline font-semibold text-on-surface">{title}</h1>
       </div>
       <div className="flex items-center gap-2">
-        <button
-          onClick={handleLogout}
+        <Link
+          href="/perfil"
           className="flex items-center gap-2 px-3 py-2 hover:bg-surface-container-high rounded-full transition-colors"
-          title="Cerrar sesión"
+          title="Mi perfil"
         >
           <div className="w-8 h-8 bg-primary-fixed rounded-full flex items-center justify-center text-xs font-bold text-on-primary-fixed">
             {initials}
           </div>
-        </button>
+        </Link>
       </div>
     </header>
   );

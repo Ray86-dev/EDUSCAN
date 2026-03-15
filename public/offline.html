@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#476550" />
+  <title>EduScan — Sin conexión</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #fbf9f5;
+      color: #1d1b19;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      padding-top: max(2rem, env(safe-area-inset-top));
+      padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+    .container {
+      max-width: 400px;
+      text-align: center;
+      animation: fadeIn 0.5s ease-out;
+    }
+    .icon-box {
+      width: 80px;
+      height: 80px;
+      background: #c8dac0;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .icon-box svg {
+      width: 40px;
+      height: 40px;
+      fill: #476550;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1d1b19;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    p {
+      color: #4a4743;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .tip {
+      background: rgba(71, 101, 80, 0.08);
+      border-radius: 12px;
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: #476550;
+      line-height: 1.5;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.875rem 2rem;
+      background: #476550;
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      min-height: 44px;
+      transition: transform 0.1s;
+    }
+    button:active { transform: scale(0.98); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="icon-box">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 8.98C20.93 5.9 16.69 4 12 4C10.13 4 8.35 4.35 6.72 4.98L9.19 7.45C10.07 7.16 11.02 7 12 7c3.53 0 6.71 1.44 9.02 3.76L24 8.98zm-2.16 2.15L12 21l-3.88-3.86 9.72-9.72 3.99 3.71zM2.27 1.72L1 3l2.1 2.1C1.8 6.28.83 7.84.01 8.98l2.98 1.78C4.28 9.37 5.8 8.22 7.52 7.51l2.04 2.04C8.38 10.07 7.37 10.8 6.5 11.73l2.98 1.78c.62-.65 1.35-1.2 2.14-1.63l8.11 8.11 1.27-1.27L2.27 1.72z"/>
+      </svg>
+    </div>
+    <h1>Sin conexión</h1>
+    <p>
+      No se ha podido conectar con el servidor.
+      Comprueba tu conexión a internet e inténtalo de nuevo.
+    </p>
+    <div class="tip">
+      Las correcciones de exámenes requieren conexión a internet para enviar las imágenes al servidor de IA.
+    </div>
+    <button onclick="window.location.reload()">
+      Reintentar conexión
+    </button>
+  </div>
+</body>
+</html>

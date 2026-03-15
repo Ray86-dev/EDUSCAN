@@ -179,6 +179,25 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
+          {/* Currículos shortcut */}
+          <Link
+            href="/curriculos"
+            className="flex items-center gap-4 bg-surface-container-lowest p-5 rounded-xl hover:bg-surface-container transition-all group"
+          >
+            <div className="w-12 h-12 bg-tertiary-container rounded-lg flex items-center justify-center shrink-0">
+              <span className="material-symbols-outlined text-on-tertiary-container">menu_book</span>
+            </div>
+            <div className="flex-1">
+              <h4 className="font-headline font-bold text-sm">Currículos</h4>
+              <p className="text-xs text-on-surface-variant">
+                Gestiona criterios de evaluación LOMLOE
+              </p>
+            </div>
+            <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors">
+              arrow_forward_ios
+            </span>
+          </Link>
+
           {/* Quote */}
           <div className="relative h-48 rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
             <div className="absolute inset-0 p-6 flex flex-col justify-end">

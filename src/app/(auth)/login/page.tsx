@@ -14,11 +14,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-sm space-y-12">
+    <div className="min-h-screen bg-surface flex flex-col items-center justify-center px-6 relative overflow-hidden">
+      {/* Patrón de fondo sutil */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+          backgroundSize: "32px 32px",
+        }}
+      />
+
+      {/* Glow sutil detrás del logo */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+
+      <div className="w-full max-w-sm space-y-12 relative z-10">
         {/* Logo */}
-        <div className="text-center space-y-2">
-          <div className="w-20 h-20 bg-primary-container rounded-2xl flex items-center justify-center mx-auto mb-6">
+        <div className="text-center space-y-3 animate-fade-in-up">
+          <div className="w-20 h-20 bg-primary-container rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/10">
             <span className="material-symbols-outlined text-on-primary-container text-4xl">
               auto_awesome
             </span>
@@ -26,16 +38,16 @@ export default function LoginPage() {
           <h1 className="text-4xl font-headline font-extrabold text-on-surface tracking-tight">
             EduScan
           </h1>
-          <p className="text-on-surface-variant text-sm leading-relaxed">
+          <p className="text-on-surface-variant text-sm leading-relaxed max-w-[280px] mx-auto">
             Corrector inteligente de exámenes manuscritos para docentes.
           </p>
         </div>
 
         {/* Login button */}
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in-up-delay-2">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-low transition-colors min-h-[44px] shadow-sm"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-low hover:shadow-md transition-all min-h-[44px] shadow-sm"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

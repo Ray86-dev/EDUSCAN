@@ -76,5 +76,5 @@ Devuelve EXCLUSIVAMENTE un JSON válido (sin markdown, sin backticks, sin texto 
 - Usa "ustedes" (no "vosotros") en todo el feedback.
 `;
 
-export const GEMINI_MODEL = "gemini-2.5-flash-preview-04-17";
+export const GEMINI_MODEL = "gemini-2.5-flash";
 export const GEMINI_TEMPERATURE = 0.1;

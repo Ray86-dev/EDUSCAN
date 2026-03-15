@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { TranscriptionItem, AIFeedback } from "@/lib/types/correction";
+import { EditCorrection } from "./edit-correction";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -21,9 +21,51 @@ export default async function CorrectionDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const transcription = correction.transcription as TranscriptionItem[];
-  const feedback = correction.ai_feedback as AIFeedback;
-  const gradeColor = correction.grade >= 5 ? "text-primary" : "text-error";
+  // Generar signed URLs frescas para las imágenes
+  let freshImageUrls: string[] = [];
+  if (correction.original_image_url) {
+    try {
+      const parsed = JSON.parse(correction.original_image_url);
+      const urls: string[] = Array.isArray(parsed) ? parsed : [correction.original_image_url];
+
+      // Intentar extraer paths de storage y generar URLs frescas
+      for (const url of urls) {
+        // Si la URL contiene un path de Supabase Storage, regenerar
+        const storageMatch = url.match(/\/storage\/v1\/object\/sign\/([^?]+)/);
+        if (storageMatch) {
+          const storagePath = decodeURIComponent(storageMatch[1]);
+          // El path viene como "bucket/ruta", separamos
+          const firstSlash = storagePath.indexOf("/");
+          if (firstSlash > 0) {
+            const bucket = storagePath.substring(0, firstSlash);
+            const filePath = storagePath.substring(firstSlash + 1);
+            const { data: signedData } = await supabase.storage
+              .from(bucket)
+              .createSignedUrl(filePath, 3600); // 1 hora
+            if (signedData?.signedUrl) {
+              freshImageUrls.push(signedData.signedUrl);
+              continue;
+            }
+          }
+        }
+        // Fallback: usar la URL tal cual
+        freshImageUrls.push(url);
+      }
+    } catch {
+      freshImageUrls = [correction.original_image_url];
+    }
+  }
+
+  // Cargar desglose criterial si es modo criterial
+  let criterionGrades: { criterion_code: string; criterion_text: string; grade: number; evidence: string; weight: number }[] = [];
+  if (correction.grading_mode === "criterial") {
+    const { data } = await supabase
+      .from("criterion_grades")
+      .select("id, criterion_code, criterion_text, grade, evidence, weight")
+      .eq("correction_id", id)
+      .order("criterion_code");
+    criterionGrades = data || [];
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-10 space-y-8 mb-20">
@@ -36,143 +78,24 @@ export default async function CorrectionDetailPage({ params }: PageProps) {
         Volver a resultados
       </Link>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-        <div>
-          <h2 className="text-3xl font-headline font-extrabold text-on-surface">
-            Detalle de corrección
-          </h2>
-          <p className="text-sm text-on-surface-variant mt-1">
-            {new Date(correction.created_at).toLocaleDateString("es-ES", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </p>
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <span
-              className={`text-xs font-bold px-2 py-1 rounded-full ${
-                correction.ai_confidence === "alta"
-                  ? "bg-primary-fixed text-on-primary-fixed"
-                  : correction.ai_confidence === "media"
-                  ? "bg-tertiary-fixed text-on-tertiary-fixed"
-                  : "bg-error-container text-on-error-container"
-              }`}
-            >
-              Confianza: {correction.ai_confidence}
-            </span>
-            {correction.is_reviewed && (
-              <span className="text-xs font-bold px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed">
-                Revisado
-              </span>
-            )}
-            {correction.ai_flags?.map((flag: string) => (
-              <span
-                key={flag}
-                className="text-xs font-medium px-2 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full"
-              >
-                {flag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="text-center shrink-0">
-          <div className={`text-5xl font-headline font-extrabold ${gradeColor}`}>
-            {correction.grade?.toFixed(1)}
-          </div>
-          <div className="text-sm font-bold text-on-surface-variant">
-            {correction.grade_label}
-          </div>
-        </div>
-      </div>
-
-      {/* Original image */}
-      {correction.original_image_url && (
-        <div className="bg-surface-container-lowest rounded-xl overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={correction.original_image_url}
-            alt="Examen original"
-            className="w-full max-h-[400px] object-contain"
-          />
-        </div>
-      )}
-
-      {/* Transcription */}
-      {transcription && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-headline font-bold">Transcripción</h3>
-          {transcription.map((item, i) => (
-            <div
-              key={i}
-              className="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-primary"
-            >
-              <div className="space-y-1 mb-3">
-                <span className="text-xs font-bold text-secondary uppercase tracking-widest">
-                  Pregunta {item.question_number}
-                </span>
-                <p className="text-base font-headline font-semibold">
-                  {item.question_text}
-                </p>
-              </div>
-              <div className="bg-surface-container-low p-4 rounded-lg text-on-surface-variant text-sm leading-relaxed italic">
-                &ldquo;{item.student_answer}&rdquo;
-                {item.legibility !== "clara" && (
-                  <span className="ml-2 text-xs font-bold text-tertiary not-italic">
-                    [{item.legibility === "parcial" ? "Parcialmente legible" : "Ilegible"}]
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Feedback */}
-      {feedback && (
-        <div className="bg-surface-container-low p-8 rounded-xl space-y-6">
-          <h3 className="text-xl font-headline font-bold">Feedback formativo</h3>
-
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-bold text-primary mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-base">thumb_up</span>
-                Fortalezas
-              </h4>
-              <ul className="space-y-1">
-                {feedback.strengths.map((s, i) => (
-                  <li key={i} className="text-sm text-on-surface-variant flex gap-2">
-                    <span className="text-primary shrink-0">·</span> {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-secondary mb-2 flex items-center gap-2">
-                <span className="material-symbols-outlined text-base">trending_up</span>
-                Áreas de mejora
-              </h4>
-              <ul className="space-y-1">
-                {feedback.improvements.map((s, i) => (
-                  <li key={i} className="text-sm text-on-surface-variant flex gap-2">
-                    <span className="text-secondary shrink-0">·</span> {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="bg-primary-fixed/30 p-4 rounded-lg">
-              <p className="text-sm text-on-surface">
-                {feedback.advice}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      <EditCorrection
+        correction={{
+          id: correction.id,
+          grade: correction.grade,
+          grade_label: correction.grade_label,
+          grading_mode: correction.grading_mode || "simple",
+          ai_confidence: correction.ai_confidence,
+          ai_flags: correction.ai_flags,
+          is_reviewed: correction.is_reviewed,
+          teacher_modified: correction.teacher_modified ?? false,
+          original_image_url: JSON.stringify(freshImageUrls),
+          transcription: correction.transcription,
+          per_question_grades: correction.per_question_grades ?? null,
+          ai_feedback: correction.ai_feedback,
+          created_at: correction.created_at,
+          criterion_grades: criterionGrades,
+        }}
+      />
     </div>
   );
 }

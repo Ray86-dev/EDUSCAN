@@ -8,8 +8,10 @@ type CorrectionStep = "upload" | "processing" | "result" | "error";
 
 interface CorrectionState {
   step: CorrectionStep;
-  imageFile: File | null;
-  imagePreview: string | null;
+  imageFiles: File[];
+  imagePreviews: string[];
+  studentId: string | null;
+  activityId: string | null;
   result: CorrectionResult | null;
   correction: CorrectionRow | null;
   error: string | null;
@@ -19,35 +21,56 @@ interface CorrectionState {
 export function useCorrection() {
   const [state, setState] = useState<CorrectionState>({
     step: "upload",
-    imageFile: null,
-    imagePreview: null,
+    imageFiles: [],
+    imagePreviews: [],
+    studentId: null,
+    activityId: null,
     result: null,
     correction: null,
     error: null,
     limitReached: false,
   });
 
-  const setFile = (file: File) => {
-    const preview = URL.createObjectURL(file);
+  const addFiles = (files: File[]) => {
+    const newPreviews = files.map((f) => URL.createObjectURL(f));
     setState((prev) => ({
       ...prev,
-      imageFile: file,
-      imagePreview: preview,
+      imageFiles: [...prev.imageFiles, ...files],
+      imagePreviews: [...prev.imagePreviews, ...newPreviews],
       error: null,
     }));
   };
 
-  const clearFile = () => {
-    if (state.imagePreview) URL.revokeObjectURL(state.imagePreview);
+  const removeFile = (index: number) => {
+    setState((prev) => {
+      URL.revokeObjectURL(prev.imagePreviews[index]);
+      return {
+        ...prev,
+        imageFiles: prev.imageFiles.filter((_, i) => i !== index),
+        imagePreviews: prev.imagePreviews.filter((_, i) => i !== index),
+      };
+    });
+  };
+
+  const clearFiles = () => {
+    state.imagePreviews.forEach((p) => URL.revokeObjectURL(p));
     setState((prev) => ({
       ...prev,
-      imageFile: null,
-      imagePreview: null,
+      imageFiles: [],
+      imagePreviews: [],
     }));
   };
 
+  const setStudentId = (id: string | null) => {
+    setState((prev) => ({ ...prev, studentId: id }));
+  };
+
+  const setActivityId = (id: string | null) => {
+    setState((prev) => ({ ...prev, activityId: id }));
+  };
+
   const submit = async () => {
-    if (!state.imageFile) return;
+    if (state.imageFiles.length === 0) return;
 
     setState((prev) => ({ ...prev, step: "processing", error: null }));
 
@@ -66,30 +89,36 @@ export function useCorrection() {
         return;
       }
 
-      // Subir imagen a Supabase Storage
-      const ext = state.imageFile.name.split(".").pop() || "jpg";
-      const path = `${user.id}/${Date.now()}.${ext}`;
+      // Subir todas las imágenes a Supabase Storage
+      const imagePaths: string[] = [];
+      const timestamp = Date.now();
 
-      const { error: uploadError } = await supabase.storage
-        .from("exam-images")
-        .upload(path, state.imageFile, {
-          contentType: state.imageFile.type,
-        });
+      for (let i = 0; i < state.imageFiles.length; i++) {
+        const file = state.imageFiles[i];
+        const ext = file.name.split(".").pop() || "jpg";
+        const path = `${user.id}/${timestamp}_${i}.${ext}`;
 
-      if (uploadError) {
-        setState((prev) => ({
-          ...prev,
-          step: "error",
-          error: "Error subiendo imagen: " + uploadError.message,
-        }));
-        return;
+        const { error: uploadError } = await supabase.storage
+          .from("exam-images")
+          .upload(path, file, { contentType: file.type });
+
+        if (uploadError) {
+          setState((prev) => ({
+            ...prev,
+            step: "error",
+            error: `Error subiendo imagen ${i + 1}: ${uploadError.message}`,
+          }));
+          return;
+        }
+
+        imagePaths.push(path);
       }
 
-      // Llamar API de corrección
+      // Llamar API de corrección con todas las rutas
       const response = await fetch("/api/correct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imagePath: path }),
+        body: JSON.stringify({ imagePaths, studentId: state.studentId, activityId: state.activityId }),
       });
 
       const data = await response.json();
@@ -128,11 +157,13 @@ export function useCorrection() {
   };
 
   const reset = () => {
-    if (state.imagePreview) URL.revokeObjectURL(state.imagePreview);
+    state.imagePreviews.forEach((p) => URL.revokeObjectURL(p));
     setState({
       step: "upload",
-      imageFile: null,
-      imagePreview: null,
+      imageFiles: [],
+      imagePreviews: [],
+      studentId: null,
+      activityId: null,
       result: null,
       correction: null,
       error: null,
@@ -142,8 +173,11 @@ export function useCorrection() {
 
   return {
     ...state,
-    setFile,
-    clearFile,
+    addFiles,
+    removeFile,
+    clearFiles,
+    setStudentId,
+    setActivityId,
     submit,
     reset,
   };

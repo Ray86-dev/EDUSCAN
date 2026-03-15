@@ -18,7 +18,8 @@ export async function checkDailyLimit(
     .single();
 
   const planTier = user?.plan_tier || "free";
-  const limit = planTier === "premium" ? Infinity : 2;
+  // TODO: volver a 2 antes de producción
+  const limit = planTier === "premium" ? Infinity : 50;
 
   // Obtener fecha actual en hora canaria (Atlantic/Canary)
   const now = new Date();

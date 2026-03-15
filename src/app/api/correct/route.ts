@@ -6,7 +6,9 @@ import {
   GEMINI_MODEL,
   GEMINI_TEMPERATURE,
 } from "@/lib/prompts/correction-simple";
+import { buildCriterialPrompt, type CriterionInput } from "@/lib/prompts/correction-criterial";
 import { checkDailyLimit, incrementUsage } from "@/lib/usage";
+import { getGradeLabel } from "@/lib/utils/grade-label";
 import type { CorrectionResult } from "@/lib/types/correction";
 
 export async function POST(request: Request) {
@@ -35,25 +37,83 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Obtener imagen del request
+    // 3. Obtener imágenes del request
     const body = await request.json();
-    const { imageUrl, imagePath } = body;
+    const { imagePaths, imagePath, studentId, activityId } = body;
 
-    if (!imageUrl && !imagePath) {
+    // Soportar tanto un solo path (legacy) como array de paths
+    const paths: string[] = imagePaths || (imagePath ? [imagePath] : []);
+
+    // Cargar criterios si hay actividad vinculada
+    let criteriaCodes: string[] = [];
+    let criteriaWithDescriptions: CriterionInput[] = [];
+    if (activityId) {
+      const { data: activity } = await supabase
+        .from("activities")
+        .select("criteria_codes, curriculum_subject_id")
+        .eq("id", activityId)
+        .single();
+      if (activity?.criteria_codes) {
+        criteriaCodes = activity.criteria_codes;
+
+        // Intentar cargar descripciones completas del catálogo
+        if (activity.curriculum_subject_id) {
+          const { data: comps } = await supabase
+            .from("curriculum_competencies")
+            .select("id")
+            .eq("subject_id", activity.curriculum_subject_id);
+
+          if (comps && comps.length > 0) {
+            const { data: catalogCriteria } = await supabase
+              .from("curriculum_criteria")
+              .select("full_code, description")
+              .in("competency_id", comps.map((c) => c.id));
+
+            if (catalogCriteria) {
+              const descMap = new Map(catalogCriteria.map((c) => [c.full_code, c.description]));
+              criteriaWithDescriptions = criteriaCodes.map((code) => ({
+                code,
+                description: descMap.get(code),
+              }));
+            }
+          }
+        }
+
+        // Fallback: si no se cargaron descriptions, buscar en cualquier currículo
+        if (criteriaWithDescriptions.length === 0) {
+          const { data: anyCriteria } = await supabase
+            .from("curriculum_criteria")
+            .select("full_code, description")
+            .in("full_code", criteriaCodes);
+
+          if (anyCriteria && anyCriteria.length > 0) {
+            const descMap = new Map(anyCriteria.map((c) => [c.full_code, c.description]));
+            criteriaWithDescriptions = criteriaCodes.map((code) => ({
+              code,
+              description: descMap.get(code),
+            }));
+          } else {
+            criteriaWithDescriptions = criteriaCodes.map((code) => ({ code }));
+          }
+        }
+      }
+    }
+    const isCriterial = criteriaCodes.length > 0;
+
+    if (paths.length === 0) {
       return NextResponse.json(
-        { error: "Se requiere imageUrl o imagePath" },
+        { error: "Se requiere al menos una imagen" },
         { status: 400 }
       );
     }
 
-    // 4. Descargar la imagen desde Supabase Storage
-    let imageBytes: Uint8Array;
-    let mimeType: string;
+    // 4. Descargar todas las imágenes desde Supabase Storage
+    const imageParts: { inlineData: { data: string; mimeType: string } }[] = [];
 
-    if (imagePath) {
+    for (const p of paths) {
       const { data: fileData, error: downloadError } = await supabase.storage
         .from("exam-images")
-        .download(imagePath);
+        .download(p);
 
       if (downloadError || !fileData) {
         return NextResponse.json(
@@ -62,21 +122,16 @@ export async function POST(request: Request) {
         );
       }
 
-      imageBytes = new Uint8Array(await fileData.arrayBuffer());
-      mimeType = fileData.type || "image/jpeg";
-    } else {
-      const response = await fetch(imageUrl);
-      if (!response.ok) {
-        return NextResponse.json(
-          { error: "No se pudo descargar la imagen" },
-          { status: 400 }
-        );
-      }
-      imageBytes = new Uint8Array(await response.arrayBuffer());
-      mimeType = response.headers.get("content-type") || "image/jpeg";
+      const bytes = new Uint8Array(await fileData.arrayBuffer());
+      imageParts.push({
+        inlineData: {
+          data: Buffer.from(bytes).toString("base64"),
+          mimeType: fileData.type || "image/jpeg",
+        },
+      });
     }
 
-    // 5. Enviar a Gemini
+    // 5. Enviar a Gemini (todas las páginas en un solo request)
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
     const model = genAI.getGenerativeModel({
       model: GEMINI_MODEL,
@@ -86,14 +141,17 @@ export async function POST(request: Request) {
       },
     });
 
+    const basePrompt = isCriterial
+      ? buildCriterialPrompt(criteriaWithDescriptions)
+      : CORRECTION_SIMPLE_PROMPT;
+
+    const pageHint = paths.length > 1
+      ? `\n\nNOTA: Este examen tiene ${paths.length} páginas. Las imágenes se envían en orden (página 1, página 2, etc.). Analiza TODAS las páginas como un único examen continuo.\n`
+      : "";
+
     const result = await model.generateContent([
-      { text: CORRECTION_SIMPLE_PROMPT },
-      {
-        inlineData: {
-          data: Buffer.from(imageBytes).toString("base64"),
-          mimeType,
-        },
-      },
+      { text: basePrompt + pageHint },
+      ...imageParts,
     ]);
 
     const rawResponse = result.response.text();
@@ -109,28 +167,47 @@ export async function POST(request: Request) {
       );
     }
 
-    // 7. Obtener URL pública firmada de la imagen
-    let publicImageUrl = imageUrl || "";
-    if (imagePath) {
-      const { data: signedUrl } = await supabase.storage
-        .from("exam-images")
-        .createSignedUrl(imagePath, 60 * 60 * 24 * 90); // 90 días
-      publicImageUrl = signedUrl?.signedUrl || "";
+    // 6b. En modo criterial: calcular nota global como media de criterion_grades
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const criterionGrades: { criterion_code: string; criterion_text?: string; grade: number; evidence: string; weight: number }[] =
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (correctionResult as any).criterion_grades || [];
+
+    if (isCriterial && criterionGrades.length > 0) {
+      const totalWeight = criterionGrades.reduce((s, cg) => s + (cg.weight || 1), 0);
+      const weightedSum = criterionGrades.reduce((s, cg) => s + cg.grade * (cg.weight || 1), 0);
+      const calculatedGrade = Math.round((weightedSum / totalWeight) * 10) / 10;
+
+      // Sobrescribir la nota de Gemini con la media calculada
+      correctionResult.grade = calculatedGrade;
+      correctionResult.grade_label = getGradeLabel(calculatedGrade);
     }
 
-    // 8. Guardar en BD
+    // 7. Obtener URLs públicas firmadas de todas las imágenes
+    const signedUrls: string[] = [];
+    for (const p of paths) {
+      const { data: signedUrl } = await supabase.storage
+        .from("exam-images")
+        .createSignedUrl(p, 60 * 60 * 24 * 90); // 90 días
+      if (signedUrl?.signedUrl) signedUrls.push(signedUrl.signedUrl);
+    }
+
+    // 8. Guardar corrección en BD
     const { data: correction, error: insertError } = await supabase
       .from("corrections")
       .insert({
         user_id: user.id,
-        original_image_url: publicImageUrl,
-        grading_mode: "simple",
+        student_id: studentId || null,
+        activity_id: activityId || null,
+        original_image_url: JSON.stringify(signedUrls),
+        grading_mode: isCriterial ? "criterial" : "simple",
         transcription: correctionResult.transcription,
         grade: correctionResult.grade,
         grade_label: correctionResult.grade_label,
         ai_feedback: correctionResult.ai_feedback,
         ai_confidence: correctionResult.ai_confidence,
         ai_flags: correctionResult.ai_flags,
+        per_question_grades: correctionResult.per_question_grades || null,
         gemini_raw_response: rawResponse,
       })
       .select()
@@ -143,10 +220,26 @@ export async function POST(request: Request) {
       );
     }
 
-    // 9. Incrementar uso diario
+    // 9. Guardar desglose criterial si aplica
+    if (isCriterial && correction && criterionGrades.length > 0) {
+      const criterionRows = criterionGrades.map(
+        (cg) => ({
+          correction_id: correction.id,
+          criterion_code: cg.criterion_code,
+          criterion_text: cg.criterion_text || cg.criterion_code,
+          grade: cg.grade,
+          evidence: cg.evidence,
+          weight: cg.weight || 1.0,
+        })
+      );
+
+      await supabase.from("criterion_grades").insert(criterionRows);
+    }
+
+    // 10. Incrementar uso diario
     await incrementUsage(supabase, user.id);
 
-    // 10. Devolver resultado
+    // 11. Devolver resultado
     return NextResponse.json({
       correction,
       result: correctionResult,
