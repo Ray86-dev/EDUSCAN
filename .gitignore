@@ -36,3 +36,15 @@ public/fallback-*.js
 # OS
 .DS_Store
 Thumbs.db
+
+# Supabase local temp
+supabase/.temp/
+
+# TypeScript build info
+tsconfig.tsbuildinfo
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Test fixtures (large binary files)
+test/data/
