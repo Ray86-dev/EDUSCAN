@@ -2,13 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IconHome, IconGroup, IconGrading, IconCurriculum, IconProfile } from "@/components/icons";
+import { ComponentType, SVGProps } from "react";
 
-const navItems = [
-  { href: "/", icon: "home", label: "Inicio" },
-  { href: "/grupos", icon: "group", label: "Grupos" },
-  { href: "/corregir", icon: "grading", label: "Corregir" },
-  { href: "/curriculos", icon: "menu_book", label: "Currículos" },
-  { href: "/perfil", icon: "person", label: "Perfil" },
+type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { size?: number }>;
+
+const navItems: { href: string; Icon: IconComponent; label: string }[] = [
+  { href: "/", Icon: IconHome, label: "Inicio" },
+  { href: "/grupos", Icon: IconGroup, label: "Grupos" },
+  { href: "/corregir", Icon: IconGrading, label: "Corregir" },
+  { href: "/curriculos", Icon: IconCurriculum, label: "Currículos" },
+  { href: "/perfil", Icon: IconProfile, label: "Perfil" },
 ];
 
 export default function BottomNav() {
@@ -36,16 +40,7 @@ export default function BottomNav() {
                   isActive ? "bg-primary-fixed" : "bg-transparent"
                 }`}
               >
-                <span
-                  className="material-symbols-outlined"
-                  style={
-                    isActive
-                      ? { fontVariationSettings: "'FILL' 1" }
-                      : undefined
-                  }
-                >
-                  {item.icon}
-                </span>
+                <item.Icon size={24} />
               </div>
               <span
                 className={`text-[11px] tracking-wide uppercase ${

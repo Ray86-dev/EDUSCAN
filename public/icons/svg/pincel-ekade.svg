@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Clipboard -->
+  <rect x="4" y="4" width="16" height="17" rx="2" stroke="#476550" stroke-width="1.5"/>
+  <rect x="8" y="2" width="8" height="4" rx="1" stroke="#476550" stroke-width="1.5" fill="#fff"/>
+  <!-- Table grid -->
+  <line x1="4" y1="10" x2="20" y2="10" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="4" y1="14" x2="20" y2="14" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="4" y1="18" x2="20" y2="18" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="10" y1="7" x2="10" y2="21" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="15" y1="7" x2="15" y2="21" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <!-- Header labels -->
+  <text x="7" y="9" text-anchor="middle" font-family="system-ui" font-size="2.2" font-weight="600" fill="#476550">Nº</text>
+  <text x="12.5" y="9" text-anchor="middle" font-family="system-ui" font-size="2.2" font-weight="600" fill="#476550">Nom</text>
+  <text x="17.5" y="9" text-anchor="middle" font-family="system-ui" font-size="2.2" font-weight="600" fill="#476550">Nota</text>
+  <!-- Sample data -->
+  <text x="7" y="12.8" text-anchor="middle" font-family="system-ui" font-size="2" fill="#476550" opacity="0.6">1</text>
+  <text x="7" y="16.8" text-anchor="middle" font-family="system-ui" font-size="2" fill="#476550" opacity="0.6">2</text>
+  <text x="17.5" y="12.8" text-anchor="middle" font-family="system-ui" font-size="2.5" font-weight="600" fill="#4a9e5c">8</text>
+  <text x="17.5" y="16.8" text-anchor="middle" font-family="system-ui" font-size="2.5" font-weight="600" fill="#d4913a">5</text>
+</svg>

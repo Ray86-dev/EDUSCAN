@@ -105,6 +105,26 @@ const config: Config = {
         "2xl": "0.75rem",
         "3xl": "1rem",
       },
+      keyframes: {
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "soft-pulse": {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.7", transform: "scale(1.05)" },
+        },
+        "progress-indeterminate": {
+          "0%": { transform: "translateX(-100%)", width: "40%" },
+          "50%": { transform: "translateX(60%)", width: "60%" },
+          "100%": { transform: "translateX(200%)", width: "40%" },
+        },
+      },
+      animation: {
+        "fade-in-up": "fade-in-up 0.3s ease-out",
+        "soft-pulse": "soft-pulse 2s ease-in-out infinite",
+        "progress-indeterminate": "progress-indeterminate 1.5s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

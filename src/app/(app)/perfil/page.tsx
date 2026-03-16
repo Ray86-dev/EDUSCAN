@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { checkDailyLimit } from "@/lib/usage";
 import LogoutButton from "./LogoutButton";
+import SubscriptionButtons from "./SubscriptionButtons";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -86,6 +87,8 @@ export default async function PerfilPage() {
           </div>
         </div>
       </div>
+
+      <SubscriptionButtons planTier={planTier} />
 
       <LogoutButton />
     </div>

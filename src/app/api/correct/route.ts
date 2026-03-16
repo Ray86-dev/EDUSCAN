@@ -7,7 +7,7 @@ import {
   GEMINI_TEMPERATURE,
 } from "@/lib/prompts/correction-simple";
 import { buildCriterialPrompt, type CriterionInput } from "@/lib/prompts/correction-criterial";
-import { checkDailyLimit, incrementUsage } from "@/lib/usage";
+import { tryIncrementUsage } from "@/lib/usage";
 import { getGradeLabel } from "@/lib/utils/grade-label";
 import type { CorrectionResult } from "@/lib/types/correction";
 
@@ -24,8 +24,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
 
-    // 2. Verificar límite diario
-    const usage = await checkDailyLimit(supabase, user.id);
+    // 2. Verificar límite diario + incrementar atómicamente
+    const usage = await tryIncrementUsage(supabase, user.id);
     if (!usage.allowed) {
       return NextResponse.json(
         {
@@ -236,10 +236,7 @@ export async function POST(request: Request) {
       await supabase.from("criterion_grades").insert(criterionRows);
     }
 
-    // 10. Incrementar uso diario
-    await incrementUsage(supabase, user.id);
-
-    // 11. Devolver resultado
+    // 10. Devolver resultado (uso ya incrementado atómicamente en paso 2)
     return NextResponse.json({
       correction,
       result: correctionResult,

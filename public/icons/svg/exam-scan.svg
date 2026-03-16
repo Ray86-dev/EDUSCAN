@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Paper sheet -->
+  <path d="M6 3h8l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" stroke="#476550" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 3v4a1 1 0 0 0 1 1h4" stroke="#476550" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Handwriting lines -->
+  <path d="M7 11c1 0 1.5-.5 2.5-.5S11 11 12 11s1.5-.5 2.5-.5" stroke="#476550" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <path d="M7 14c.8 0 1.2-.4 2-.4s1.2.4 2 .4 1.2-.4 2-.4" stroke="#476550" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+  <!-- Scan beam -->
+  <line x1="3" y1="17" x2="20" y2="17" stroke="#7bae7f" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="0.5 2"/>
+  <rect x="2.5" y="16" width="18" height="2" rx="1" fill="#7bae7f" opacity="0.15"/>
+</svg>

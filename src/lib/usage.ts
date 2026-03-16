@@ -18,8 +18,7 @@ export async function checkDailyLimit(
     .single();
 
   const planTier = user?.plan_tier || "free";
-  // TODO: volver a 2 antes de producción
-  const limit = planTier === "premium" ? Infinity : 50;
+  const limit = planTier === "premium" ? Infinity : 2;
 
   // Obtener fecha actual en hora canaria (Atlantic/Canary)
   const now = new Date();
@@ -73,4 +72,48 @@ export async function incrementUsage(
       corrections_count: 1,
     });
   }
+}
+
+/**
+ * Atómico: check + increment en una sola transacción SQL.
+ * Seguro para correcciones concurrentes (evita race conditions).
+ * Llama a la función PostgreSQL try_increment_usage.
+ */
+export async function tryIncrementUsage(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<UsageResult> {
+  // Obtener plan del usuario
+  const { data: user } = await supabase
+    .from("users")
+    .select("plan_tier")
+    .eq("id", userId)
+    .single();
+
+  const planTier = user?.plan_tier || "free";
+
+  // Premium no tiene límite — incrementar directamente sin check
+  if (planTier === "premium") {
+    await incrementUsage(supabase, userId);
+    return { allowed: true, used: 0, limit: Infinity };
+  }
+
+  const limit = 2;
+  const { data, error } = await supabase.rpc("try_increment_usage", {
+    p_user_id: userId,
+    p_limit: limit,
+  });
+
+  if (error) {
+    // Fallback al método no-atómico si la función RPC no existe aún
+    const result = await checkDailyLimit(supabase, userId);
+    if (result.allowed) await incrementUsage(supabase, userId);
+    return result;
+  }
+
+  return {
+    allowed: data.allowed,
+    used: data.used,
+    limit: data.limit,
+  };
 }

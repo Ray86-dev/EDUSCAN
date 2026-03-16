@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Shield/badge shape -->
+  <path d="M12 2L4 6v5c0 5.25 3.4 10.15 8 11.4 4.6-1.25 8-6.15 8-11.4V6z" stroke="#476550" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Inner highlight -->
+  <path d="M12 4.5L6 7.5v3.5c0 4 2.6 7.7 6 8.7 3.4-1 6-4.7 6-8.7V7.5z" fill="#c8dac0" opacity="0.3"/>
+  <!-- Grade number -->
+  <text x="12" y="15" text-anchor="middle" font-family="system-ui" font-size="8" font-weight="700" fill="#476550">A</text>
+</svg>

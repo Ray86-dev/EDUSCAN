@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { EduScanLogo } from "@/components/icons";
 
 interface TopAppBarProps {
   title?: string;
@@ -21,11 +22,7 @@ export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProp
   return (
     <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between min-h-[56px]">
       <div className="flex items-center gap-4">
-        <div className="w-9 h-9 bg-primary-container rounded-full flex items-center justify-center">
-          <span className="material-symbols-outlined text-on-primary-container text-lg">
-            auto_awesome
-          </span>
-        </div>
+        <EduScanLogo size={36} className="rounded-lg" />
         <h1 className="text-xl font-headline font-semibold text-on-surface">{title}</h1>
       </div>
       <div className="flex items-center gap-2">

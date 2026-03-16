@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Open book -->
+  <path d="M2 4c2-1 4.5-1 6 0 1.5 1 3 1 4 1V19c-1 0-2.5 0-4-1s-4-1-6 0z" stroke="#476550" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="M12 5c1 0 2.5 0 4-1s4-1 6 0v15c-2-1-4.5-1-6 0s-3 1-4 1z" stroke="#476550" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- Spine -->
+  <line x1="12" y1="5" x2="12" y2="19" stroke="#476550" stroke-width="1.5"/>
+  <!-- LOMLOE badge -->
+  <rect x="5" y="9" width="4" height="3" rx="0.5" fill="#476550" opacity="0.15" stroke="#476550" stroke-width="0.7"/>
+  <text x="7" y="11.2" text-anchor="middle" font-family="system-ui" font-size="2" font-weight="600" fill="#476550">LOE</text>
+  <!-- Criteria lines right page -->
+  <line x1="14" y1="9" x2="19" y2="9" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+  <line x1="14" y1="11" x2="18" y2="11" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+  <line x1="14" y1="13" x2="19.5" y2="13" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+</svg>

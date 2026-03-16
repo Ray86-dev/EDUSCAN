@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { checkDailyLimit } from "@/lib/usage";
+import { IconCameraExam, IconCorrectionsTotal, IconToday, IconArrowRight, IconArrowForward, IconEmpty, IconCurriculum } from "@/components/icons";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -100,18 +101,14 @@ export default async function DashboardPage() {
                         Revisado
                       </span>
                     )}
-                    <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors">
-                      arrow_forward_ios
-                    </span>
+                    <IconArrowRight size={20} className="text-on-surface-variant/40 group-hover:text-primary transition-colors" />
                   </div>
                 </Link>
               ))}
             </div>
           ) : (
             <div className="bg-surface-container-lowest p-8 rounded-xl text-center">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3 block">
-                grading
-              </span>
+              <IconEmpty size={48} className="text-on-surface-variant/30 mb-3 mx-auto block" />
               <p className="text-on-surface-variant text-sm">
                 Aún no has realizado ninguna corrección.
               </p>
@@ -124,9 +121,7 @@ export default async function DashboardPage() {
             className="flex items-center gap-6 bg-surface-container-lowest p-6 rounded-xl transition-all hover:bg-surface-container hover:shadow-xl group"
           >
             <div className="h-20 w-20 bg-primary-container rounded-xl flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-on-primary-container text-4xl">
-                add_a_photo
-              </span>
+              <IconCameraExam size={40} className="text-on-primary-container" />
             </div>
             <div className="flex-1">
               <h4 className="font-headline font-bold text-xl mb-1">
@@ -136,9 +131,7 @@ export default async function DashboardPage() {
                 Sube una foto de un examen manuscrito y obtén la corrección en segundos.
               </p>
             </div>
-            <span className="material-symbols-outlined text-primary/40 group-hover:text-primary transition-colors text-3xl">
-              arrow_forward
-            </span>
+            <IconArrowForward size={28} className="text-primary/40 group-hover:text-primary transition-colors" />
           </Link>
         </div>
 
@@ -151,7 +144,7 @@ export default async function DashboardPage() {
           <div className="bg-surface-container-low rounded-2xl p-6 space-y-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-primary-fixed rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-primary">grading</span>
+                <IconCorrectionsTotal size={24} className="text-primary" />
               </div>
               <div>
                 <p className="text-2xl font-headline font-extrabold">{totalCorrections || 0}</p>
@@ -162,7 +155,7 @@ export default async function DashboardPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-secondary-fixed rounded-lg flex items-center justify-center">
-                  <span className="material-symbols-outlined text-secondary">today</span>
+                  <IconToday size={24} className="text-secondary" />
                 </div>
                 <div>
                   <p className="text-2xl font-headline font-extrabold">
@@ -197,7 +190,7 @@ export default async function DashboardPage() {
             className="flex items-center gap-4 bg-surface-container-lowest p-5 rounded-xl hover:bg-surface-container transition-all group"
           >
             <div className="w-12 h-12 bg-tertiary-container rounded-lg flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-on-tertiary-container">menu_book</span>
+              <IconCurriculum size={24} className="text-on-tertiary-container" />
             </div>
             <div className="flex-1">
               <h4 className="font-headline font-bold text-sm">Currículos</h4>
@@ -205,9 +198,7 @@ export default async function DashboardPage() {
                 Gestiona criterios de evaluación LOMLOE
               </p>
             </div>
-            <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary transition-colors">
-              arrow_forward_ios
-            </span>
+            <IconArrowRight size={20} className="text-on-surface-variant/40 group-hover:text-primary transition-colors" />
           </Link>
 
           {/* Quote */}

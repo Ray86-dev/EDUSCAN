@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none">
+  <!-- Brain/AI circle -->
+  <circle cx="12" cy="12" r="9" stroke="#476550" stroke-width="1.5"/>
+  <!-- Neural paths -->
+  <circle cx="9" cy="10" r="1.2" fill="#476550"/>
+  <circle cx="15" cy="10" r="1.2" fill="#476550"/>
+  <circle cx="12" cy="15" r="1.2" fill="#476550"/>
+  <circle cx="7" cy="14" r="0.8" fill="#476550" opacity="0.6"/>
+  <circle cx="17" cy="14" r="0.8" fill="#476550" opacity="0.6"/>
+  <!-- Connections -->
+  <line x1="9" y1="10" x2="15" y2="10" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+  <line x1="9" y1="10" x2="12" y2="15" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+  <line x1="15" y1="10" x2="12" y2="15" stroke="#476550" stroke-width="0.8" opacity="0.5"/>
+  <line x1="7" y1="14" x2="9" y2="10" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="17" y1="14" x2="15" y2="10" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="7" y1="14" x2="12" y2="15" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <line x1="17" y1="14" x2="12" y2="15" stroke="#476550" stroke-width="0.8" opacity="0.4"/>
+  <!-- Sparkle top-right -->
+  <path d="M19.5 4l.5 1.5L21.5 6l-1.5.5L19.5 8l-.5-1.5L17.5 6l1.5-.5z" fill="#7bae7f"/>
+</svg>

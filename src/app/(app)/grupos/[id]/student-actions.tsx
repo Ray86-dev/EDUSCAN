@@ -30,13 +30,24 @@ const EMPTY_FORM: StudentFormData = {
   repeats: false,
 };
 
+interface GradeInfo {
+  correctionId: string;
+  grade: number;
+  gradeLabel: string;
+  isReviewed: boolean;
+  aiConfidence: string | null;
+}
+
 export function StudentActions({
   groupId,
   students,
+  gradesByStudent,
 }: {
   groupId: string;
   students: Student[];
+  gradesByStudent?: Map<string, GradeInfo>;
 }) {
+  const hasGrades = gradesByStudent && gradesByStudent.size > 0;
   const router = useRouter();
   const [showForm, setShowForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
@@ -245,53 +256,87 @@ export function StudentActions({
                 <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-widest px-6 py-3">
                   Apellidos, Nombre
                 </th>
+                {hasGrades && (
+                  <th className="text-center text-xs font-bold text-on-surface-variant uppercase tracking-widest px-4 py-3 w-20">
+                    Nota
+                  </th>
+                )}
                 <th className="text-right text-xs font-bold text-on-surface-variant uppercase tracking-widest px-6 py-3 w-24">
                   Acciones
                 </th>
               </tr>
             </thead>
             <tbody>
-              {students.map((student) => (
-                <tr
-                  key={student.id}
-                  className="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container transition-colors"
-                >
-                  <td className="px-6 py-4 text-sm font-medium text-on-surface-variant">
-                    {student.list_number || "—"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-on-surface">
-                      {student.first_surname}
-                      {student.second_surname ? ` ${student.second_surname}` : ""}
-                      , {student.name}
-                    </span>
-                    {student.repeats && (
-                      <span className="ml-2 text-xs font-bold px-1.5 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded">
-                        Rep.
+              {students.map((student) => {
+                const gradeInfo = gradesByStudent?.get(student.id);
+                return (
+                  <tr
+                    key={student.id}
+                    className="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container transition-colors"
+                  >
+                    <td className="px-6 py-4 text-sm font-medium text-on-surface-variant">
+                      {student.list_number || "—"}
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-medium text-on-surface">
+                        {student.first_surname}
+                        {student.second_surname ? ` ${student.second_surname}` : ""}
+                        , {student.name}
                       </span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        onClick={() => openEditForm(student)}
-                        className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"
-                      >
-                        <span className="material-symbols-outlined text-lg">edit</span>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(student.id)}
-                        disabled={deleting === student.id}
-                        className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors disabled:opacity-50"
-                      >
-                        <span className="material-symbols-outlined text-lg">
-                          {deleting === student.id ? "hourglass_empty" : "delete"}
+                      {student.repeats && (
+                        <span className="ml-2 text-xs font-bold px-1.5 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded">
+                          Rep.
                         </span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                      )}
+                    </td>
+                    {hasGrades && (
+                      <td className="px-4 py-4 text-center">
+                        {gradeInfo ? (
+                          <a
+                            href={`/resultados/${gradeInfo.correctionId}`}
+                            className="inline-flex flex-col items-center gap-0.5 group/grade"
+                          >
+                            <span className={`text-base font-headline font-bold ${
+                              gradeInfo.grade >= 5 ? "text-primary" : "text-error"
+                            } group-hover/grade:underline`}>
+                              {gradeInfo.grade.toFixed(1)}
+                            </span>
+                            <span className="text-[10px] text-on-surface-variant leading-none">
+                              {gradeInfo.gradeLabel}
+                            </span>
+                            {gradeInfo.isReviewed && (
+                              <span className="material-symbols-outlined text-primary text-xs" style={{ fontSize: "12px" }}>
+                                check_circle
+                              </span>
+                            )}
+                          </a>
+                        ) : (
+                          <span className="text-xs text-on-surface-variant/40">—</span>
+                        )}
+                      </td>
+                    )}
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex justify-end gap-1">
+                        <button
+                          onClick={() => openEditForm(student)}
+                          className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-lg">edit</span>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(student.id)}
+                          disabled={deleting === student.id}
+                          className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          <span className="material-symbols-outlined text-lg">
+                            {deleting === student.id ? "hourglass_empty" : "delete"}
+                          </span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

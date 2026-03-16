@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCorrection } from "@/hooks/useCorrection";
 import { createClient } from "@/lib/supabase/client";
 import type { TranscriptionItem } from "@/lib/types/correction";
+import UpgradeModal from "@/components/UpgradeModal";
 
 export default function CorregirPage() {
   const correction = useCorrection();
@@ -18,7 +19,15 @@ export default function CorregirPage() {
   }
 
   if (correction.step === "error") {
-    return <ErrorStep correction={correction} />;
+    return (
+      <>
+        <ErrorStep correction={correction} />
+        <UpgradeModal
+          open={correction.limitReached}
+          onClose={correction.reset}
+        />
+      </>
+    );
   }
 
   return <ResultStep correction={correction} />;
