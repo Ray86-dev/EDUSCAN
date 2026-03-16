@@ -57,7 +57,7 @@ export default async function GruposPage() {
       <section className="mb-12">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
           <div>
-            <h2 className="text-5xl font-headline font-extrabold text-primary mb-2 tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-headline font-extrabold text-primary mb-2 tracking-tight">
               Grupos
             </h2>
             <p className="text-on-surface-variant">

@@ -19,7 +19,7 @@ export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProp
     : "?";
 
   return (
-    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between min-h-[56px]">
       <div className="flex items-center gap-4">
         <div className="w-9 h-9 bg-primary-container rounded-full flex items-center justify-center">
           <span className="material-symbols-outlined text-on-primary-container text-lg">
@@ -31,7 +31,7 @@ export default function TopAppBar({ title = "EduScan", userName }: TopAppBarProp
       <div className="flex items-center gap-2">
         <Link
           href="/perfil"
-          className="flex items-center gap-2 px-3 py-2 hover:bg-surface-container-high rounded-full transition-colors"
+          className="flex items-center justify-center gap-2 px-3 py-2 min-h-[44px] min-w-[44px] hover:bg-surface-container-high rounded-full transition-colors"
           title="Mi perfil"
         >
           <div className="w-8 h-8 bg-primary-fixed rounded-full flex items-center justify-center text-xs font-bold text-on-primary-fixed">

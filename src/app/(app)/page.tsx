@@ -24,14 +24,14 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true });
 
   return (
-    <div className="max-w-6xl mx-auto w-full px-6 py-10">
+    <div className="max-w-6xl mx-auto w-full px-6 py-6 md:py-10">
       {/* Welcome Section */}
       <section className="mb-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
         <div className="md:col-span-8">
           <p className="text-primary font-medium mb-2 tracking-wide text-sm">
             BIENVENIDO DE NUEVO, {userName.toUpperCase()}
           </p>
-          <h2 className="text-5xl md:text-6xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline font-extrabold text-on-surface tracking-tight leading-tight">
             Tu espacio de <br />
             <span className="text-primary italic">enfoque.</span>
           </h2>
@@ -159,16 +159,28 @@ export default async function DashboardPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-secondary-fixed rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-secondary">today</span>
+            <div className="space-y-3">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-secondary-fixed rounded-lg flex items-center justify-center">
+                  <span className="material-symbols-outlined text-secondary">today</span>
+                </div>
+                <div>
+                  <p className="text-2xl font-headline font-extrabold">
+                    {usage.used} de {usage.limit === Infinity ? "∞" : usage.limit}
+                  </p>
+                  <p className="text-xs text-on-surface-variant">Correcciones hoy</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-headline font-extrabold">
-                  {usage.used} / {usage.limit === Infinity ? "∞" : usage.limit}
-                </p>
-                <p className="text-xs text-on-surface-variant">Correcciones hoy</p>
-              </div>
+              {usage.limit !== Infinity && (
+                <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${
+                      usage.used >= usage.limit ? "bg-error" : "bg-primary"
+                    }`}
+                    style={{ width: `${Math.min((usage.used / usage.limit) * 100, 100)}%` }}
+                  />
+                </div>
+              )}
             </div>
 
             <Link

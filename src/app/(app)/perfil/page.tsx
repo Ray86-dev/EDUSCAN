@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { checkDailyLimit } from "@/lib/usage";
 import LogoutButton from "./LogoutButton";
 
 export default async function PerfilPage() {
@@ -16,6 +17,7 @@ export default async function PerfilPage() {
     .single();
 
   const planTier = profile?.plan_tier || "free";
+  const usage = await checkDailyLimit(supabase, user!.id);
   const createdAt = profile?.created_at
     ? new Date(profile.created_at).toLocaleDateString("es-ES", {
         year: "numeric",
@@ -25,9 +27,9 @@ export default async function PerfilPage() {
     : "";
 
   return (
-    <div className="max-w-lg mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-lg mx-auto px-6 py-6 md:py-10 space-y-8 mb-20">
       <div>
-        <h2 className="text-4xl font-headline font-extrabold text-primary tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-headline font-extrabold text-primary tracking-tight">
           Perfil
         </h2>
         <p className="text-on-surface-variant mt-1">Tu cuenta de EduScan.</p>
@@ -60,13 +62,27 @@ export default async function PerfilPage() {
               <span className="text-sm font-medium">{createdAt}</span>
             </div>
           )}
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-on-surface-variant">
-              Correcciones diarias
-            </span>
-            <span className="text-sm font-medium">
-              {planTier === "free" ? "2 / día" : "Ilimitadas"}
-            </span>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-on-surface-variant">
+                Correcciones hoy
+              </span>
+              <span className="text-sm font-medium">
+                {planTier === "free"
+                  ? `${usage.used} de ${usage.limit} usadas`
+                  : "Ilimitadas"}
+              </span>
+            </div>
+            {planTier === "free" && (
+              <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    usage.used >= usage.limit ? "bg-error" : "bg-primary"
+                  }`}
+                  style={{ width: `${Math.min((usage.used / usage.limit) * 100, 100)}%` }}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

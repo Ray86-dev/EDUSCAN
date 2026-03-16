@@ -5,6 +5,15 @@
 @layer base {
   body {
     @apply bg-surface text-on-surface antialiased;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+  }
+
+  /* Native feel: disable text selection on interactive elements */
+  button, a, nav, [role="button"] {
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   h1, h2, h3, h4, h5, h6 {

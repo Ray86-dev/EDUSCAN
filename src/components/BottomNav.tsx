@@ -15,7 +15,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky bottom-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+    <nav className="sticky bottom-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
       <div className="max-w-md mx-auto flex justify-around items-center">
         {navItems.map((item) => {
           const isActive =
@@ -27,7 +27,7 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-1 group px-3 py-1 ${
+              className={`flex flex-col items-center justify-center gap-1 group px-3 py-2 min-h-[48px] ${
                 isActive ? "text-primary" : "text-on-surface-variant hover:text-primary"
               } transition-colors`}
             >
@@ -48,7 +48,7 @@ export default function BottomNav() {
                 </span>
               </div>
               <span
-                className={`text-[10px] tracking-wide uppercase ${
+                className={`text-[11px] tracking-wide uppercase ${
                   isActive ? "font-bold" : "font-medium"
                 }`}
               >

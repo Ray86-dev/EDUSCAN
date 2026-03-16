@@ -80,9 +80,9 @@ function UploadStep({
   const hasFiles = correction.imageFiles.length > 0;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-2xl mx-auto px-6 py-6 md:py-10 space-y-8">
       <div>
-        <h2 className="text-4xl font-headline font-extrabold text-primary tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-headline font-extrabold text-primary tracking-tight">
           Corregir
         </h2>
         <p className="text-on-surface-variant mt-1">
@@ -332,7 +332,7 @@ function ProcessingStep({ imagePreviews }: { imagePreviews: string[] }) {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10 space-y-8 animate-fade-in-up">
+    <div className="max-w-2xl mx-auto px-6 py-6 md:py-10 space-y-8 animate-fade-in-up">
       {/* Icono principal */}
       <div className="text-center space-y-5 py-8">
         <div className="w-20 h-20 bg-primary-container rounded-2xl flex items-center justify-center mx-auto animate-soft-pulse">
@@ -413,7 +413,7 @@ function ErrorStep({
   correction: ReturnType<typeof useCorrection>;
 }) {
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10 space-y-8">
+    <div className="max-w-2xl mx-auto px-6 py-6 md:py-10 space-y-8">
       <div className="text-center space-y-4 py-12">
         <div className="w-20 h-20 bg-error-container rounded-2xl flex items-center justify-center mx-auto">
           <span className="material-symbols-outlined text-on-error-container text-4xl">
@@ -467,7 +467,7 @@ function ResultStep({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 space-y-8 mb-20">
+    <div className="max-w-4xl mx-auto px-6 py-6 md:py-10 space-y-8 mb-20">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>

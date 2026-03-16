@@ -79,7 +79,7 @@ export function CurriculumUpload() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Error parseando currículo");
+        setError(data.error || "Error al analizar el currículo");
         setStep("error");
         return;
       }
@@ -244,9 +244,10 @@ export function CurriculumUpload() {
         <button
           onClick={handleParse}
           disabled={!file || !stage || !subjectName}
-          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px] disabled:opacity-50"
+          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 active:scale-[0.98] transition-all min-h-[44px] disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          Parsear con IA
+          <span className="material-symbols-outlined text-lg">auto_awesome</span>
+          Analizar currículo
         </button>
       </div>
     );

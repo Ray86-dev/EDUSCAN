@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { CurriculumUpload } from "./curriculum-upload";
+import { CollapsibleUpload } from "./collapsible-upload";
 
 export default async function CurriculosPage() {
   const supabase = await createClient();
@@ -68,7 +68,7 @@ export default async function CurriculosPage() {
       </Link>
 
       <div className="mb-8">
-        <h2 className="text-4xl font-headline font-extrabold text-on-surface tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-headline font-extrabold text-on-surface tracking-tight">
           Currículos
         </h2>
         <p className="text-on-surface-variant mt-1">
@@ -76,7 +76,7 @@ export default async function CurriculosPage() {
         </p>
       </div>
 
-      <CurriculumUpload />
+      <CollapsibleUpload defaultOpen={(subjects || []).length === 0} />
 
       {/* Lista de currículos existentes */}
       {(subjects || []).length > 0 ? (
