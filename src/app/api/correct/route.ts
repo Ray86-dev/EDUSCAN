@@ -183,6 +183,14 @@ export async function POST(request: Request) {
       correctionResult.grade_label = getGradeLabel(calculatedGrade);
     }
 
+    // 6c. Normalizar ai_confidence para cumplir CHECK constraint
+    const validConfidence = ["alta", "media", "baja"] as const;
+    const rawConfidence = (correctionResult.ai_confidence || "").toString().toLowerCase().trim();
+    const normalizedConfidence = validConfidence.includes(rawConfidence as typeof validConfidence[number])
+      ? (rawConfidence as "alta" | "media" | "baja")
+      : "media"; // fallback seguro
+    correctionResult.ai_confidence = normalizedConfidence;
+
     // 7. Obtener URLs públicas firmadas de todas las imágenes
     const signedUrls: string[] = [];
     for (const p of paths) {
