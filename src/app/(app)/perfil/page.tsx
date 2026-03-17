@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { checkDailyLimit } from "@/lib/usage";
 import LogoutButton from "./LogoutButton";
 import SubscriptionButtons from "./SubscriptionButtons";
+import ProfileAvatar from "./ProfileAvatar";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -9,6 +10,7 @@ export default async function PerfilPage() {
 
   const fullName = user?.user_metadata?.full_name || "Docente";
   const email = user?.email || "";
+  const avatarUrl = user?.user_metadata?.avatar_url || user?.user_metadata?.picture || "";
 
   // Obtener plan del usuario
   const { data: profile } = await supabase
@@ -39,11 +41,7 @@ export default async function PerfilPage() {
       {/* User info card */}
       <div className="bg-surface-container-low p-8 rounded-xl space-y-6">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-primary-container rounded-full flex items-center justify-center">
-            <span className="material-symbols-outlined text-on-primary-container text-3xl">
-              person
-            </span>
-          </div>
+          <ProfileAvatar userId={user!.id} avatarUrl={avatarUrl} fullName={fullName} />
           <div>
             <h3 className="text-xl font-headline font-bold">{fullName}</h3>
             <p className="text-on-surface-variant text-sm">{email}</p>

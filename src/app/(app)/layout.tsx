@@ -12,10 +12,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   const userName = user.user_metadata?.full_name || user.email || "";
+  const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
 
   return (
     <>
-      <TopAppBar userName={userName} />
+      <TopAppBar userName={userName} avatarUrl={avatarUrl} />
       <main className="flex-1 pb-20">{children}</main>
       <BottomNav />
     </>
