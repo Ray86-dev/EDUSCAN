@@ -52,7 +52,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
       </head>
-      <body className="font-body min-h-[100dvh] flex flex-col overflow-x-hidden">{children}</body>
+      <body className="font-body min-h-[100dvh] flex flex-col">{children}</body>
     </html>
   );
 }

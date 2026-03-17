@@ -17,8 +17,6 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     overscroll-behavior: none;
-    /* Prevent horizontal overflow causing width jumps */
-    overflow-x: hidden;
     /* Use dvh for proper mobile viewport height */
     min-height: 100dvh;
   }

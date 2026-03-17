@@ -21,7 +21,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-surface flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-[100dvh] bg-surface flex flex-col items-center justify-center px-6 relative overflow-x-hidden">
       {/* Patrón de fondo sutil */}
       <div
         className="absolute inset-0 opacity-[0.03]"
