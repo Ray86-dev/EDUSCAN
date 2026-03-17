@@ -2,17 +2,24 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconHome, IconGroup, IconGrading, IconCurriculum, IconProfile } from "@/components/icons";
+import { IconHome, IconGroup, IconCorrectGroup, IconActivities, IconCurriculum } from "@/components/icons";
 import { ComponentType, SVGProps } from "react";
 
 type IconComponent = ComponentType<SVGProps<SVGSVGElement> & { size?: number }>;
 
-const navItems: { href: string; Icon: IconComponent; label: string }[] = [
+interface NavItem {
+  href: string;
+  Icon: IconComponent;
+  label: string;
+  isCenter?: boolean;
+}
+
+const navItems: NavItem[] = [
   { href: "/", Icon: IconHome, label: "Inicio" },
   { href: "/grupos", Icon: IconGroup, label: "Grupos" },
-  { href: "/corregir", Icon: IconGrading, label: "Corregir" },
+  { href: "/corregir/grupo", Icon: IconCorrectGroup, label: "Corregir", isCenter: true },
+  { href: "/actividades", Icon: IconActivities, label: "Actividades" },
   { href: "/curriculos", Icon: IconCurriculum, label: "Currículos" },
-  { href: "/perfil", Icon: IconProfile, label: "Perfil" },
 ];
 
 export default function BottomNav() {
@@ -20,12 +27,35 @@ export default function BottomNav() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-1 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
-      <div className="max-w-md mx-auto flex justify-around items-center">
+      <div className="max-w-md mx-auto flex justify-around items-end">
         {navItems.map((item) => {
           const isActive =
             item.href === "/"
               ? pathname === "/"
               : pathname.startsWith(item.href);
+
+          if (item.isCenter) {
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="flex flex-col items-center justify-center gap-1 flex-1 -mt-5"
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-all ${
+                  isActive
+                    ? "bg-primary shadow-primary/30"
+                    : "bg-primary/90 shadow-primary/20 hover:bg-primary"
+                }`}>
+                  <item.Icon size={28} className="text-on-primary" />
+                </div>
+                <span className={`text-[10px] uppercase whitespace-nowrap text-center leading-tight ${
+                  isActive ? "font-bold text-primary" : "font-medium text-on-surface-variant"
+                }`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          }
 
           return (
             <Link

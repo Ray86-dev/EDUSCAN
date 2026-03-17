@@ -88,6 +88,32 @@ export function IconProfile(props: IconProps) {
   );
 }
 
+/** Icono Actividades — clipboard con lista */
+export function IconActivities(props: IconProps) {
+  const p = defaults(props);
+  return (
+    <svg {...p}>
+      <path d="M9 2h6a1 1 0 011 1v1H8V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <line x1="9" y1="10" x2="15" y2="10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="9" y1="14" x2="13" y2="14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Icono Corregir Grupo — documento con lupa, para botón central */
+export function IconCorrectGroup(props: IconProps) {
+  const p = defaults(props, 28);
+  return (
+    <svg {...p} viewBox="0 0 28 28">
+      <path d="M7 3h9l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M16 3v4a1 1 0 001 1h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="15" r="3" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M14.1 17.1L17 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /** Icono Cámara + foto de examen */
 export function IconCameraExam(props: IconProps) {
   const p = defaults(props);
