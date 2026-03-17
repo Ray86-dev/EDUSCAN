@@ -244,7 +244,7 @@ export function CurriculumUpload() {
         <button
           onClick={handleParse}
           disabled={!file || !stage || !subjectName}
-          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 active:scale-[0.98] transition-all min-h-[44px] disabled:opacity-50 flex items-center justify-center gap-2"
+          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform] min-h-[44px] disabled:opacity-50 flex items-center justify-center gap-2"
         >
           <span className="material-symbols-outlined text-lg">auto_awesome</span>
           Analizar currículo
@@ -423,7 +423,7 @@ export function CurriculumUpload() {
         <button
           onClick={handleConfirm}
           disabled={selectedCourses.length === 0}
-          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px] disabled:opacity-50"
+          className="w-full py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors min-h-[44px] disabled:opacity-50"
         >
           {isMultiCourse
             ? `Confirmar y guardar ${selectedCourses.length} ${selectedCourses.length === 1 ? "curso" : "cursos"} (${selectedCriteria} criterios)`

@@ -5,21 +5,13 @@ import { IconArrowRight } from "@/components/icons";
 export default async function GlobalActivitiesPage() {
   const supabase = await createClient();
 
-  // Obtener todos los grupos del usuario
-  const { data: groups } = await supabase
-    .from("groups")
-    .select("id, name, stage, subject")
-    .order("name");
-
-  // Obtener todas las actividades
-  const groupIds = (groups || []).map((g) => g.id);
-  const { data: activities } = groupIds.length > 0
-    ? await supabase
-        .from("activities")
-        .select("id, group_id, title, description, criteria_codes, created_at")
-        .in("group_id", groupIds)
-        .order("created_at", { ascending: false })
-    : { data: [] };
+  // Obtener grupos y actividades en paralelo (RLS filtra por usuario)
+  const [{ data: groups }, { data: activities }] = await Promise.all([
+    supabase.from("groups").select("id, name, stage, subject").order("name"),
+    supabase.from("activities")
+      .select("id, group_id, title, description, criteria_codes, created_at")
+      .order("created_at", { ascending: false }),
+  ]);
 
   // Agrupar actividades por grupo
   const groupMap = new Map<string, typeof groups extends (infer T)[] | null ? T : never>();
@@ -72,7 +64,7 @@ export default async function GlobalActivitiesPage() {
                   <Link
                     key={activity.id}
                     href={`/grupos/${group.id}/actividades/${activity.id}`}
-                    className="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl hover:bg-surface-container transition-all group"
+                    className="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl hover:bg-surface-container transition-colors group"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-sm text-on-surface truncate">

@@ -1,12 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/supabase/get-user";
 import { checkDailyLimit } from "@/lib/usage";
 import LogoutButton from "./LogoutButton";
 import SubscriptionButtons from "./SubscriptionButtons";
 import ProfileAvatar from "./ProfileAvatar";
 
 export default async function PerfilPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const [user, supabase] = await Promise.all([getUser(), createClient()]);
+  if (!user) return null;
 
   const fullName = user?.user_metadata?.full_name || "Docente";
   const email = user?.email || "";
@@ -75,7 +76,7 @@ export default async function PerfilPage() {
             {planTier === "free" && (
               <div className="w-full h-2 bg-surface-container-highest rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${
+                  className={`h-full rounded-full transition-[width] ${
                     usage.used >= usage.limit ? "bg-error" : "bg-primary"
                   }`}
                   style={{ width: `${Math.min((usage.used / usage.limit) * 100, 100)}%` }}

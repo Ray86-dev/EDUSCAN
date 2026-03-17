@@ -12,20 +12,14 @@ export default async function GroupDetailPage({ params }: PageProps) {
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: group } = await supabase
-    .from("groups")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const [{ data: group }, { data: students }] = await Promise.all([
+    supabase.from("groups").select("*").eq("id", id).single(),
+    supabase.from("students").select("*").eq("group_id", id)
+      .order("list_number", { ascending: true, nullsFirst: false })
+      .order("first_surname", { ascending: true }),
+  ]);
 
   if (!group) notFound();
-
-  const { data: students } = await supabase
-    .from("students")
-    .select("*")
-    .eq("group_id", id)
-    .order("list_number", { ascending: true, nullsFirst: false })
-    .order("first_surname", { ascending: true });
 
   // Obtener la corrección más reciente de cada alumno
   const studentIds = (students || []).map((s) => s.id);
@@ -99,7 +93,7 @@ export default async function GroupDetailPage({ params }: PageProps) {
           <div className="flex flex-col gap-3 w-full sm:w-auto">
             <Link
               href={`/corregir/sesion/${id}`}
-              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all min-h-[44px] text-sm font-bold shadow-md shadow-primary/20"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-colors min-h-[44px] text-sm font-bold shadow-md shadow-primary/20"
             >
               <span className="material-symbols-outlined text-[18px]">grading</span>
               Corregir grupo
@@ -107,7 +101,7 @@ export default async function GroupDetailPage({ params }: PageProps) {
             <div className="flex gap-2">
               <Link
                 href={`/grupos/${id}/actividades`}
-                className="flex items-center justify-center gap-2 px-3 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-all min-h-[44px] text-sm font-medium"
+                className="flex items-center justify-center gap-2 px-3 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-colors min-h-[44px] text-sm font-medium"
               >
                 <span className="material-symbols-outlined text-[18px]">assignment</span>
                 Actividades

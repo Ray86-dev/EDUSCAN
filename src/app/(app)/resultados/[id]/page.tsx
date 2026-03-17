@@ -28,29 +28,27 @@ export default async function CorrectionDetailPage({ params }: PageProps) {
       const parsed = JSON.parse(correction.original_image_url);
       const urls: string[] = Array.isArray(parsed) ? parsed : [correction.original_image_url];
 
-      // Intentar extraer paths de storage y generar URLs frescas
-      for (const url of urls) {
-        // Si la URL contiene un path de Supabase Storage, regenerar
-        const storageMatch = url.match(/\/storage\/v1\/object\/sign\/([^?]+)/);
-        if (storageMatch) {
-          const storagePath = decodeURIComponent(storageMatch[1]);
-          // El path viene como "bucket/ruta", separamos
-          const firstSlash = storagePath.indexOf("/");
-          if (firstSlash > 0) {
-            const bucket = storagePath.substring(0, firstSlash);
-            const filePath = storagePath.substring(firstSlash + 1);
-            const { data: signedData } = await supabase.storage
-              .from(bucket)
-              .createSignedUrl(filePath, 3600); // 1 hora
-            if (signedData?.signedUrl) {
-              freshImageUrls.push(signedData.signedUrl);
-              continue;
+      // Generar signed URLs en paralelo
+      freshImageUrls = await Promise.all(
+        urls.map(async (url) => {
+          const storageMatch = url.match(/\/storage\/v1\/object\/sign\/([^?]+)/);
+          if (storageMatch) {
+            const storagePath = decodeURIComponent(storageMatch[1]);
+            const firstSlash = storagePath.indexOf("/");
+            if (firstSlash > 0) {
+              const bucket = storagePath.substring(0, firstSlash);
+              const filePath = storagePath.substring(firstSlash + 1);
+              const { data: signedData } = await supabase.storage
+                .from(bucket)
+                .createSignedUrl(filePath, 3600);
+              if (signedData?.signedUrl) {
+                return signedData.signedUrl;
+              }
             }
           }
-        }
-        // Fallback: usar la URL tal cual
-        freshImageUrls.push(url);
-      }
+          return url;
+        })
+      );
     } catch {
       freshImageUrls = [correction.original_image_url];
     }

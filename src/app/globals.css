@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,13 +27,6 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-manrope), sans-serif;
-  }
-}
-
-@layer utilities {
-  .glass-effect {
-    backdrop-filter: blur(12px);
-    background: rgba(228, 226, 223, 0.7);
   }
 }
 

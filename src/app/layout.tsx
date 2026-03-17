@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Manrope, Public_Sans } from "next/font/google";
 import "./globals.css";
 
@@ -51,8 +52,29 @@ export default function RootLayout({
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        {/* Material Symbols - carga no bloqueante */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          as="style"
+        />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+          />
+        </noscript>
       </head>
-      <body className="font-body min-h-[100dvh] flex flex-col">{children}</body>
+      <body className="font-body min-h-[100dvh] flex flex-col">
+        {children}
+        <Script
+          id="material-symbols-loader"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `var l=document.createElement('link');l.rel='stylesheet';l.href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap';document.head.appendChild(l);`,
+          }}
+        />
+      </body>
     </html>
   );
 }

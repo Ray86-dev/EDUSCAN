@@ -7,21 +7,12 @@ export default async function CorregirGrupoPage() {
 
   const { data: groups } = await supabase
     .from("groups")
-    .select("id, name, stage, subject")
+    .select("id, name, stage, subject, students(count)")
     .order("name");
 
-  // Contar alumnos por grupo
-  const groupIds = (groups || []).map((g) => g.id);
-  const { data: students } = groupIds.length > 0
-    ? await supabase
-        .from("students")
-        .select("id, group_id")
-        .in("group_id", groupIds)
-    : { data: [] };
-
   const studentCountByGroup = new Map<string, number>();
-  for (const s of students || []) {
-    studentCountByGroup.set(s.group_id, (studentCountByGroup.get(s.group_id) || 0) + 1);
+  for (const g of groups || []) {
+    studentCountByGroup.set(g.id, (g.students as unknown as { count: number }[])?.[0]?.count || 0);
   }
 
   const stageLabels: Record<string, string> = {
@@ -50,7 +41,7 @@ export default async function CorregirGrupoPage() {
             <Link
               key={group.id}
               href={`/corregir/sesion/${group.id}`}
-              className="flex items-center justify-between bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary hover:bg-surface-container transition-all group"
+              className="flex items-center justify-between bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary hover:bg-surface-container transition-colors group"
             >
               <div>
                 <h3 className="font-headline font-bold text-on-surface">

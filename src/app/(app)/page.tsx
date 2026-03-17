@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getUser } from "@/lib/supabase/get-user";
 import { IconArrowRight, IconEmpty } from "@/components/icons";
 import { Greeting } from "@/components/Greeting";
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const [user, supabase] = await Promise.all([getUser(), createClient()]);
 
   const userName = user?.user_metadata?.full_name?.split(" ")[0] || "docente";
 
@@ -40,7 +40,7 @@ export default async function DashboardPage() {
               <Link
                 key={c.id}
                 href={`/resultados/${c.id}`}
-                className="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl hover:bg-surface-container transition-all group relative overflow-hidden"
+                className="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl hover:bg-surface-container transition-colors group relative overflow-hidden"
               >
                 <div className={`absolute top-0 left-0 w-1 h-full ${
                   c.grade >= 5 ? "bg-primary" : "bg-error"

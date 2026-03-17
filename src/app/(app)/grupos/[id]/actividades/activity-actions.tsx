@@ -108,7 +108,7 @@ export function ActivityActions({
       <div className="flex justify-end mb-6">
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all min-h-[44px] text-sm font-medium"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-colors min-h-[44px] text-sm font-medium"
         >
           <span className="material-symbols-outlined text-[18px]">add</span>
           Nueva actividad
@@ -164,7 +164,7 @@ export function ActivityActions({
               <button
                 onClick={handleSave}
                 disabled={saving || !form.title.trim()}
-                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px] disabled:opacity-50"
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors min-h-[44px] disabled:opacity-50"
               >
                 {saving ? "Guardando..." : editing ? "Guardar" : "Crear"}
               </button>
@@ -179,7 +179,7 @@ export function ActivityActions({
           {activities.map((activity) => (
             <div
               key={activity.id}
-              className="bg-surface-container-lowest rounded-xl border-l-4 border-secondary hover:shadow-md transition-all relative"
+              className="bg-surface-container-lowest rounded-xl border-l-4 border-secondary hover:shadow-md transition-shadow relative"
             >
               <Link
                 href={`/grupos/${groupId}/actividades/${activity.id}`}

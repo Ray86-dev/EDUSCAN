@@ -11,27 +11,18 @@ export default async function BatchCorrectionPage({ params }: PageProps) {
   const { groupId } = await params;
   const supabase = await createClient();
 
-  const { data: group } = await supabase
-    .from("groups")
-    .select("*")
-    .eq("id", groupId)
-    .single();
+  const [{ data: group }, { data: students }, { data: activities }] = await Promise.all([
+    supabase.from("groups").select("*").eq("id", groupId).single(),
+    supabase.from("students").select("id, list_number, first_surname, second_surname, name")
+      .eq("group_id", groupId)
+      .order("list_number", { ascending: true, nullsFirst: false })
+      .order("first_surname", { ascending: true }),
+    supabase.from("activities").select("id, title, criteria_codes")
+      .eq("group_id", groupId)
+      .order("created_at", { ascending: false }),
+  ]);
 
   if (!group) notFound();
-
-  const { data: students } = await supabase
-    .from("students")
-    .select("id, list_number, first_surname, second_surname, name")
-    .eq("group_id", groupId)
-    .order("list_number", { ascending: true, nullsFirst: false })
-    .order("first_surname", { ascending: true });
-
-  // Obtener actividades del grupo
-  const { data: activities } = await supabase
-    .from("activities")
-    .select("id, title, criteria_codes")
-    .eq("group_id", groupId)
-    .order("created_at", { ascending: false });
 
   // Obtener correcciones existentes para estos alumnos
   const studentIds = (students || []).map((s) => s.id);

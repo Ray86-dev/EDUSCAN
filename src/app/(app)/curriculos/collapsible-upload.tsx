@@ -10,7 +10,7 @@ export function CollapsibleUpload({ defaultOpen }: { defaultOpen: boolean }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-low rounded-xl border border-dashed border-outline-variant hover:border-primary/50 hover:bg-surface-container transition-all min-h-[56px]"
+        className="w-full flex items-center justify-center gap-3 py-4 bg-surface-container-low rounded-xl border border-dashed border-outline-variant hover:border-primary/50 hover:bg-surface-container transition-colors min-h-[56px]"
       >
         <span className="material-symbols-outlined text-primary text-xl">
           upload_file

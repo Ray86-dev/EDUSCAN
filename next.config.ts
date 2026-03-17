@@ -7,8 +7,8 @@ const withPWA = withPWAInit({
   fallbacks: {
     document: "/offline.html",
   },
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
+  cacheOnFrontEndNav: false,
+  aggressiveFrontEndNavCaching: false,
 });
 
 const nextConfig: NextConfig = {

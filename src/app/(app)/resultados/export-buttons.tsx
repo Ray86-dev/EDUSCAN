@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { generateCSV, downloadBlob, type ExportRow } from "@/lib/export/export-csv";
-import { generatePDF } from "@/lib/export/export-pdf";
+import type { ExportRow } from "@/lib/export/export-csv";
 
 interface ExportButtonsProps {
   groupId: string;
@@ -86,7 +85,10 @@ export function ExportButtons({ groupId, groupName }: ExportButtonsProps) {
 
   const handleExportCSV = async () => {
     setExporting(true);
-    const { rows, criteriaCodes } = await fetchData();
+    const [{ rows, criteriaCodes }, { generateCSV, downloadBlob }] = await Promise.all([
+      fetchData(),
+      import("@/lib/export/export-csv"),
+    ]);
     const blob = generateCSV(rows, groupName, criteriaCodes.length > 0 ? criteriaCodes : undefined);
     const filename = `${groupName.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, "_")}_notas.csv`;
     downloadBlob(blob, filename);
@@ -95,7 +97,11 @@ export function ExportButtons({ groupId, groupName }: ExportButtonsProps) {
 
   const handleExportPDF = async () => {
     setExporting(true);
-    const { rows } = await fetchData();
+    const [{ rows }, { generatePDF }, { downloadBlob }] = await Promise.all([
+      fetchData(),
+      import("@/lib/export/export-pdf"),
+      import("@/lib/export/export-csv"),
+    ]);
     const blob = generatePDF(rows, groupName);
     const filename = `${groupName.replace(/[^a-zA-Z0-9áéíóúñÁÉÍÓÚÑ ]/g, "_")}_informe.pdf`;
     downloadBlob(blob, filename);
@@ -107,7 +113,7 @@ export function ExportButtons({ groupId, groupName }: ExportButtonsProps) {
       <button
         onClick={handleExportCSV}
         disabled={exporting}
-        className="flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl hover:bg-surface-container-high transition-all min-h-[44px] text-sm font-medium disabled:opacity-50"
+        className="flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl hover:bg-surface-container-high transition-colors min-h-[44px] text-sm font-medium disabled:opacity-50"
       >
         <span className="material-symbols-outlined text-[18px]">table_view</span>
         CSV
@@ -115,7 +121,7 @@ export function ExportButtons({ groupId, groupName }: ExportButtonsProps) {
       <button
         onClick={handleExportPDF}
         disabled={exporting}
-        className="flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl hover:bg-surface-container-high transition-all min-h-[44px] text-sm font-medium disabled:opacity-50"
+        className="flex items-center gap-2 px-4 py-2.5 bg-surface-container text-on-surface rounded-xl hover:bg-surface-container-high transition-colors min-h-[44px] text-sm font-medium disabled:opacity-50"
       >
         <span className="material-symbols-outlined text-[18px]">picture_as_pdf</span>
         PDF

@@ -463,7 +463,7 @@ export function SessionFlow({
         </div>
         <div className="h-2 bg-surface-container-highest rounded-full overflow-hidden">
           <div
-            className="h-full bg-primary rounded-full transition-all duration-500"
+            className="h-full bg-primary rounded-full transition-[width] duration-500"
             style={{ width: `${totalCount > 0 ? (totalCorrected / totalCount) * 100 : 0}%` }}
           />
         </div>
@@ -517,7 +517,7 @@ export function SessionFlow({
         <div className="flex gap-2">
           <button
             onClick={() => setRapidMode(false)}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-colors ${
               !rapidMode
                 ? "bg-primary text-on-primary"
                 : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
@@ -528,7 +528,7 @@ export function SessionFlow({
           </button>
           <button
             onClick={() => setRapidMode(true)}
-            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium min-h-[44px] transition-colors ${
               rapidMode
                 ? "bg-primary text-on-primary"
                 : "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
@@ -544,7 +544,7 @@ export function SessionFlow({
       {rapidMode && !isCapturing && !isRapidCapturing && (
         <button
           onClick={startRapidCapture}
-          className="w-full py-4 bg-tertiary-container text-on-tertiary-container font-bold rounded-xl hover:bg-tertiary-container/80 transition-all min-h-[44px] text-lg flex items-center justify-center gap-2"
+          className="w-full py-4 bg-tertiary-container text-on-tertiary-container font-bold rounded-xl hover:bg-tertiary-container/80 transition-colors min-h-[44px] text-lg flex items-center justify-center gap-2"
         >
           <span className="material-symbols-outlined text-xl">photo_camera</span>
           Fotografiar siguiente examen
@@ -623,7 +623,7 @@ export function SessionFlow({
                   {status === "error" ? (
                     <button
                       onClick={() => retryQueueItem(student.id)}
-                      className="px-4 py-2 rounded-xl text-sm font-medium min-h-[44px] bg-error-container text-on-error-container hover:bg-error-container/80 transition-all"
+                      className="px-4 py-2 rounded-xl text-sm font-medium min-h-[44px] bg-error-container text-on-error-container hover:bg-error-container/80 transition-colors"
                     >
                       Reintentar
                     </button>
@@ -634,7 +634,7 @@ export function SessionFlow({
                   ) : (
                     <button
                       onClick={() => selectStudent(student.id)}
-                      className={`px-4 py-2 rounded-xl text-sm font-medium min-h-[44px] transition-all ${
+                      className={`px-4 py-2 rounded-xl text-sm font-medium min-h-[44px] transition-colors ${
                         status === "corrected"
                           ? "bg-surface-container text-on-surface-variant hover:bg-surface-container-high"
                           : "bg-primary text-on-primary hover:bg-primary/90"
@@ -679,7 +679,7 @@ export function SessionFlow({
                 >
                   <button
                     onClick={() => document.getElementById("rapid-camera")?.click()}
-                    className="w-full border-2 border-dashed border-tertiary/40 rounded-xl flex flex-col items-center justify-center gap-2 p-8 min-h-[160px] hover:border-tertiary/70 hover:bg-tertiary-container/10 transition-all cursor-pointer active:scale-[0.99]"
+                    className="w-full border-2 border-dashed border-tertiary/40 rounded-xl flex flex-col items-center justify-center gap-2 p-8 min-h-[160px] hover:border-tertiary/70 hover:bg-tertiary-container/10 transition-[border-color,background-color,transform] cursor-pointer active:scale-[0.99]"
                   >
                     <span className="material-symbols-outlined text-tertiary text-3xl">photo_camera</span>
                     <p className="font-headline font-bold text-on-surface">Hacer foto</p>
@@ -741,7 +741,7 @@ export function SessionFlow({
                   </div>
                   <button
                     onClick={detectStudent}
-                    className="w-full py-4 bg-tertiary-container text-on-tertiary-container font-bold rounded-xl shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-all min-h-[44px] text-lg flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-tertiary-container text-on-tertiary-container font-bold rounded-xl shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-transform min-h-[44px] text-lg flex items-center justify-center gap-2"
                   >
                     <span className="material-symbols-outlined text-xl">person_search</span>
                     Detectar alumno
@@ -873,7 +873,7 @@ export function SessionFlow({
                 <button
                   onClick={confirmRapidAndQueue}
                   disabled={!rapidSelectedStudentId}
-                  className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-all min-h-[44px] disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-transform min-h-[44px] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   Corregir
                   <span className="material-symbols-outlined text-lg">arrow_forward</span>
@@ -927,7 +927,7 @@ export function SessionFlow({
             >
               <button
                 onClick={() => document.getElementById("session-camera")?.click()}
-                className="w-full border-2 border-dashed border-primary/40 rounded-xl flex flex-col items-center justify-center gap-2 p-8 min-h-[160px] hover:border-primary/70 hover:bg-primary-fixed/10 transition-all cursor-pointer active:scale-[0.99]"
+                className="w-full border-2 border-dashed border-primary/40 rounded-xl flex flex-col items-center justify-center gap-2 p-8 min-h-[160px] hover:border-primary/70 hover:bg-primary-fixed/10 transition-[border-color,background-color,transform] cursor-pointer active:scale-[0.99]"
               >
                 <span className="material-symbols-outlined text-primary text-3xl">photo_camera</span>
                 <p className="font-headline font-bold text-on-surface">Hacer foto</p>
@@ -993,7 +993,7 @@ export function SessionFlow({
                   <>
                     <button
                       onClick={submitToQueue}
-                      className="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-all min-h-[44px] text-lg flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-transform min-h-[44px] text-lg flex items-center justify-center gap-2"
                     >
                       {next ? (
                         <>

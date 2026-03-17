@@ -139,14 +139,14 @@ export function StudentActions({
         <div className="flex gap-2">
           <button
             onClick={() => setShowImport(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-all min-h-[44px] text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-colors min-h-[44px] text-sm font-medium"
           >
             <span className="material-symbols-outlined text-[18px]">upload_file</span>
             <span className="hidden sm:inline">Importar CSV</span>
           </button>
           <button
             onClick={openCreateForm}
-            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all min-h-[44px] text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-colors min-h-[44px] text-sm font-medium"
           >
             <span className="material-symbols-outlined text-[18px]">person_add</span>
             Añadir alumno
@@ -235,7 +235,7 @@ export function StudentActions({
               <button
                 onClick={handleSave}
                 disabled={saving || !form.name.trim() || !form.first_surname.trim()}
-                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px] disabled:opacity-50"
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors min-h-[44px] disabled:opacity-50"
               >
                 {saving ? "Guardando..." : editingStudent ? "Guardar" : "Añadir"}
               </button>

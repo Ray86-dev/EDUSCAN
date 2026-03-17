@@ -118,7 +118,7 @@ export function GroupActions({
       <div className="mb-8 flex justify-end">
         <button
           onClick={openCreateForm}
-          className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all shadow-sm min-h-[44px]"
+          className="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-colors shadow-sm min-h-[44px]"
         >
           <span className="material-symbols-outlined text-[20px]">add</span>
           <span className="font-medium">Nuevo Grupo</span>
@@ -215,7 +215,7 @@ export function GroupActions({
               <button
                 onClick={handleSave}
                 disabled={saving || !form.name.trim()}
-                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px] disabled:opacity-50"
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors min-h-[44px] disabled:opacity-50"
               >
                 {saving ? "Guardando..." : editingGroup ? "Guardar cambios" : "Crear grupo"}
               </button>
@@ -232,7 +232,7 @@ export function GroupActions({
             return (
               <div
                 key={group.id}
-                className={`bg-surface-container-lowest p-6 rounded-xl border-l-4 ${colors.border} hover:shadow-lg transition-all group relative`}
+                className={`bg-surface-container-lowest p-6 rounded-xl border-l-4 ${colors.border} hover:shadow-lg transition-shadow group relative`}
               >
                 <div className="flex justify-between items-start">
                   <Link href={`/grupos/${group.id}`} className="flex-1">

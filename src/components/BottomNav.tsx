@@ -41,7 +41,7 @@ export default function BottomNav() {
                 href={item.href}
                 className="flex flex-col items-center justify-center gap-1 flex-1 -mt-5"
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-all ${
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg transition-[background-color,box-shadow] ${
                   isActive
                     ? "bg-primary shadow-primary/30"
                     : "bg-primary/90 shadow-primary/20 hover:bg-primary"
@@ -66,7 +66,7 @@ export default function BottomNav() {
               } transition-colors`}
             >
               <div
-                className={`px-3 py-1 rounded-full transition-all ${
+                className={`px-3 py-1 rounded-full transition-colors ${
                   isActive ? "bg-primary-fixed" : "bg-transparent"
                 }`}
               >

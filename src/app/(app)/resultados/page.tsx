@@ -88,7 +88,7 @@ export default async function ResultadosPage() {
               {distribution.map((d, i) => (
                 <div key={d.label} className="flex flex-col items-center flex-1 gap-4">
                   <div
-                    className={`w-full ${barColors[i]} rounded-t-lg transition-all hover:bg-primary-fixed-dim`}
+                    className={`w-full ${barColors[i]} rounded-t-lg transition-[height,background-color] hover:bg-primary-fixed-dim`}
                     style={{ height: `${(d.count / maxCount) * 100}%`, minHeight: d.count > 0 ? "8px" : "0" }}
                   />
                   <div className="text-center">
@@ -107,7 +107,7 @@ export default async function ResultadosPage() {
               <Link
                 key={c.id}
                 href={`/resultados/${c.id}`}
-                className="flex items-center justify-between bg-surface-container-lowest p-5 rounded-xl hover:bg-surface-container transition-all group relative overflow-hidden"
+                className="flex items-center justify-between bg-surface-container-lowest p-5 rounded-xl hover:bg-surface-container transition-colors group relative overflow-hidden"
               >
                 <div className={`absolute top-0 left-0 w-1 h-full ${
                   c.grade >= 5 ? "bg-primary" : "bg-error"

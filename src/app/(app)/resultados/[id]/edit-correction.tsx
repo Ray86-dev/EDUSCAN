@@ -408,7 +408,7 @@ export function EditCorrection({ correction }: { correction: CorrectionData }) {
                 {/* Barra de progreso */}
                 <div className="h-2 bg-surface-container rounded-full overflow-hidden mb-3">
                   <div
-                    className={`h-full rounded-full transition-all duration-500 ${gradeBarColor(cg.grade)}`}
+                    className={`h-full rounded-full transition-[width] duration-500 ${gradeBarColor(cg.grade)}`}
                     style={{ width: `${(cg.grade / 10) * 100}%` }}
                   />
                 </div>

@@ -161,7 +161,7 @@ export function ImportStudents({ groupId, onClose }: ImportStudentsProps) {
               </button>
               <button
                 onClick={handleImport}
-                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-all min-h-[44px]"
+                className="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary/90 transition-colors min-h-[44px]"
               >
                 Importar {students.length} alumnos
               </button>

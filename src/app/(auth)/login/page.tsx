@@ -80,7 +80,7 @@ export default function LoginPage() {
         <div className="space-y-4 animate-fade-in-up-delay-2">
           <button
             onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-low hover:shadow-md transition-all min-h-[44px] shadow-sm"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-surface-container-lowest border border-outline-variant rounded-xl hover:bg-surface-container-low hover:shadow-md transition-[background-color,box-shadow] min-h-[44px] shadow-sm"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

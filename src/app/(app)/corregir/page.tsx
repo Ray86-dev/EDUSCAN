@@ -110,7 +110,7 @@ function UploadStep({
           {/* Botón principal: Cámara */}
           <button
             onClick={() => document.getElementById("camera-input")?.click()}
-            className="w-full border-2 border-dashed border-primary/40 rounded-xl flex flex-col items-center justify-center gap-3 p-10 min-h-[220px] hover:border-primary/70 hover:bg-primary-fixed/10 transition-all cursor-pointer active:scale-[0.99]"
+            className="w-full border-2 border-dashed border-primary/40 rounded-xl flex flex-col items-center justify-center gap-3 p-10 min-h-[220px] hover:border-primary/70 hover:bg-primary-fixed/10 transition-[border-color,background-color,transform] cursor-pointer active:scale-[0.99]"
           >
             <div className="w-16 h-16 bg-primary-fixed rounded-2xl flex items-center justify-center">
               <span className="material-symbols-outlined text-primary text-3xl">
@@ -312,7 +312,7 @@ function UploadStep({
           {/* Submit */}
           <button
             onClick={correction.submit}
-            className="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-all min-h-[44px] text-lg"
+            className="w-full py-4 bg-primary text-on-primary font-bold rounded-xl shadow-lg shadow-primary/25 hover:scale-[1.01] active:scale-[0.99] transition-transform min-h-[44px] text-lg"
           >
             Corregir examen
           </button>
@@ -358,11 +358,11 @@ function ProcessingStep({ imagePreviews }: { imagePreviews: string[] }) {
           {PROCESSING_STEPS.map((step, i) => (
             <div
               key={i}
-              className={`flex items-center gap-3 transition-all duration-500 ${
+              className={`flex items-center gap-3 transition-opacity duration-500 ${
                 i <= currentStep ? "opacity-100" : "opacity-30"
               }`}
             >
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-500 ${
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors duration-500 ${
                 i < currentStep
                   ? "bg-primary"
                   : i === currentStep
@@ -609,14 +609,14 @@ function ResultStep({
       <div className="flex gap-4">
         <button
           onClick={correction.reset}
-          className="flex-1 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-xl hover:shadow-md transition-all min-h-[44px]"
+          className="flex-1 py-3 bg-secondary-container text-on-secondary-container font-bold rounded-xl hover:shadow-md transition-shadow min-h-[44px]"
         >
           Nueva corrección
         </button>
         <button
           onClick={handleConfirm}
           disabled={confirmed}
-          className={`flex-1 py-3 font-bold rounded-xl shadow-lg transition-all min-h-[44px] ${
+          className={`flex-1 py-3 font-bold rounded-xl shadow-lg transition-[background-color,box-shadow,transform] min-h-[44px] ${
             confirmed
               ? "bg-primary-fixed text-on-primary-fixed"
               : "bg-primary text-on-primary shadow-primary/25 hover:scale-[1.01] active:scale-[0.99]"

@@ -159,28 +159,28 @@ export default async function ActivityDetailPage({ params }: PageProps) {
           <div className="flex rounded-full overflow-hidden h-3">
             {tiers.green > 0 && (
               <div
-                className="bg-primary transition-all"
+                className="bg-primary transition-[width]"
                 style={{ width: `${(tiers.green / totalStudents) * 100}%` }}
                 title={`7-10: ${tiers.green}`}
               />
             )}
             {tiers.orange > 0 && (
               <div
-                className="bg-warning transition-all"
+                className="bg-warning transition-[width]"
                 style={{ width: `${(tiers.orange / totalStudents) * 100}%` }}
                 title={`5-6.99: ${tiers.orange}`}
               />
             )}
             {tiers.red > 0 && (
               <div
-                className="bg-error transition-all"
+                className="bg-error transition-[width]"
                 style={{ width: `${(tiers.red / totalStudents) * 100}%` }}
                 title={`<5: ${tiers.red}`}
               />
             )}
             {tiers.gray > 0 && (
               <div
-                className="bg-outline-variant transition-all"
+                className="bg-outline-variant transition-[width]"
                 style={{ width: `${(tiers.gray / totalStudents) * 100}%` }}
                 title={`Sin corregir: ${tiers.gray}`}
               />

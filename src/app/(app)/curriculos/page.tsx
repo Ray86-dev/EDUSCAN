@@ -80,7 +80,7 @@ export default async function CurriculosPage() {
             <Link
               key={subject.id}
               href={`/curriculos/${subject.id}`}
-              className="block bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary hover:shadow-md transition-all"
+              className="block bg-surface-container-lowest p-5 rounded-xl border-l-4 border-primary hover:shadow-md transition-shadow"
             >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
