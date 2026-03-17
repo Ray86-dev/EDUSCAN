@@ -7,9 +7,9 @@
 @layer base {
   html {
     overflow-x: hidden;
-    height: 100%;
+    min-height: 100%;
     /* Prevent pull-to-refresh on mobile */
-    overscroll-behavior: none;
+    overscroll-behavior-y: none;
   }
 
   body {
