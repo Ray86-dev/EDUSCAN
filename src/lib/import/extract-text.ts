@@ -1,7 +1,6 @@
 // Utilidades para extraer texto de documentos PDF y ODT
 
 // Importar desde lib directamente para evitar que pdf-parse cargue un PDF de test en build
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const pdfParse = require("pdf-parse/lib/pdf-parse.js");
 import JSZip from "jszip";
 

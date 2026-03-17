@@ -168,9 +168,7 @@ export async function POST(request: Request) {
     }
 
     // 6b. En modo criterial: calcular nota global como media de criterion_grades
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const criterionGrades: { criterion_code: string; criterion_text?: string; grade: number; evidence: string; weight: number }[] =
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (correctionResult as any).criterion_grades || [];
 
     if (isCriterial && criterionGrades.length > 0) {
