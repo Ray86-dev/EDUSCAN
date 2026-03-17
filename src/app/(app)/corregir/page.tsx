@@ -476,7 +476,7 @@ function ResultStep({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-6 md:py-10 space-y-8 mb-20">
+    <div className="max-w-4xl mx-auto px-6 py-6 md:py-10 space-y-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
         <div>

@@ -16,7 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <>
       <TopAppBar userName={userName} />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-20">{children}</main>
       <BottomNav />
     </>
   );

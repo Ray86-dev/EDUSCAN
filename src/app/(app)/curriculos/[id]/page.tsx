@@ -62,7 +62,7 @@ export default async function CurriculumDetailPage({ params }: PageProps) {
   const totalCriteria = (criteria || []).length;
 
   return (
-    <div className="px-6 py-8 max-w-4xl mx-auto w-full mb-20">
+    <div className="px-6 py-8 max-w-4xl mx-auto w-full">
       <Link
         href="/curriculos"
         className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"

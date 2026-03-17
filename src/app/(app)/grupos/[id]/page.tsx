@@ -67,7 +67,7 @@ export default async function GroupDetailPage({ params }: PageProps) {
   const passRate = gradedCount > 0 ? Math.round((passCount / gradedCount) * 100) : null;
 
   return (
-    <div className="px-6 py-8 max-w-4xl mx-auto w-full mb-20">
+    <div className="px-6 py-8 max-w-4xl mx-auto w-full">
       {/* Back */}
       <Link
         href="/grupos"

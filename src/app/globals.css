@@ -5,11 +5,22 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    overflow-x: hidden;
+    height: 100%;
+    /* Prevent pull-to-refresh on mobile */
+    overscroll-behavior: none;
+  }
+
   body {
     @apply bg-surface text-on-surface antialiased;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     overscroll-behavior: none;
+    /* Prevent horizontal overflow causing width jumps */
+    overflow-x: hidden;
+    /* Use dvh for proper mobile viewport height */
+    min-height: 100dvh;
   }
 
   /* Native feel: disable text selection on interactive elements */

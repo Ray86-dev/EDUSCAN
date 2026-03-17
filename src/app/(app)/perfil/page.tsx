@@ -28,7 +28,7 @@ export default async function PerfilPage() {
     : "";
 
   return (
-    <div className="max-w-lg mx-auto px-6 py-6 md:py-10 space-y-8 mb-20">
+    <div className="max-w-lg mx-auto px-6 py-6 md:py-10 space-y-8">
       <div>
         <h2 className="text-3xl md:text-4xl font-headline font-extrabold text-primary tracking-tight">
           Perfil

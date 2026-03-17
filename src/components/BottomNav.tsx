@@ -19,7 +19,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky bottom-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
       <div className="max-w-md mx-auto flex justify-around items-center">
         {navItems.map((item) => {
           const isActive =

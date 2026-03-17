@@ -68,7 +68,7 @@ export default async function CorrectionDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-10 space-y-8 mb-20">
+    <div className="max-w-4xl mx-auto px-6 py-10 space-y-8">
       {/* Back */}
       <Link
         href="/resultados"

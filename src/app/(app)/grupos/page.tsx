@@ -52,7 +52,7 @@ export default async function GruposPage() {
   }));
 
   return (
-    <div className="px-6 py-8 max-w-5xl mx-auto w-full mb-20">
+    <div className="px-6 py-8 max-w-5xl mx-auto w-full">
       {/* Hero */}
       <section className="mb-12">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
