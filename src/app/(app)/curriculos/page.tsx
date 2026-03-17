@@ -59,14 +59,6 @@ export default async function CurriculosPage() {
 
   return (
     <div className="px-6 py-8 max-w-4xl mx-auto w-full">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"
-      >
-        <span className="material-symbols-outlined text-base">arrow_back</span>
-        Inicio
-      </Link>
-
       <div className="mb-8">
         <h2 className="text-3xl md:text-4xl font-headline font-extrabold text-on-surface tracking-tight">
           Currículos

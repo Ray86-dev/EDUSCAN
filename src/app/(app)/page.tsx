@@ -108,10 +108,16 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="bg-surface-container-lowest p-8 rounded-xl text-center">
-              <IconEmpty size={48} className="text-on-surface-variant/30 mb-3 mx-auto block" />
-              <p className="text-on-surface-variant text-sm">
+              <IconEmpty size={48} className="text-on-surface-variant/50 mb-3 mx-auto block" />
+              <p className="text-on-surface-variant text-sm mb-4">
                 Aún no has realizado ninguna corrección.
               </p>
+              <Link
+                href="/corregir"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors min-h-[44px]"
+              >
+                Corregir mi primer examen
+              </Link>
             </div>
           )}
 

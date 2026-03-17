@@ -21,7 +21,7 @@ export default function TopAppBar({ title = "EduScan", userName, avatarUrl }: To
     : "?";
 
   return (
-    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between min-h-[56px]">
+    <header className="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant/15 px-6 py-4 pt-[max(1rem,env(safe-area-inset-top))] flex items-center justify-between min-h-[56px]">
       <div className="flex items-center gap-4">
         <EduScanLogo size={36} className="rounded-lg" />
         <h1 className="text-xl font-headline font-semibold text-on-surface">{title}</h1>

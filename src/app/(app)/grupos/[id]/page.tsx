@@ -96,22 +96,24 @@ export default async function GroupDetailPage({ params }: PageProps) {
               )}
             </div>
           </div>
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-col gap-3 w-full sm:w-auto">
             <Link
               href={`/corregir/sesion/${id}`}
-              className="flex items-center gap-2 px-4 py-2.5 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all min-h-[44px] text-sm font-medium"
+              className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-primary text-on-primary rounded-xl hover:bg-primary/90 transition-all min-h-[44px] text-sm font-bold shadow-md shadow-primary/20"
             >
               <span className="material-symbols-outlined text-[18px]">grading</span>
               Corregir grupo
             </Link>
-            <Link
-              href={`/grupos/${id}/actividades`}
-              className="flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-all min-h-[44px] text-sm font-medium"
-            >
-              <span className="material-symbols-outlined text-[18px]">assignment</span>
-              Actividades
-            </Link>
-            <ExportButtons groupId={id} groupName={group.name} />
+            <div className="flex gap-2">
+              <Link
+                href={`/grupos/${id}/actividades`}
+                className="flex items-center justify-center gap-2 px-3 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-all min-h-[44px] text-sm font-medium"
+              >
+                <span className="material-symbols-outlined text-[18px]">assignment</span>
+                Actividades
+              </Link>
+              <ExportButtons groupId={id} groupName={group.name} />
+            </div>
           </div>
         </div>
       </div>

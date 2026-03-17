@@ -142,7 +142,7 @@ export function StudentActions({
             className="flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-on-secondary-container rounded-xl hover:bg-secondary-container/80 transition-all min-h-[44px] text-sm font-medium"
           >
             <span className="material-symbols-outlined text-[18px]">upload_file</span>
-            Importar CSV
+            <span className="hidden sm:inline">Importar CSV</span>
           </button>
           <button
             onClick={openCreateForm}
@@ -246,23 +246,24 @@ export function StudentActions({
 
       {/* Students list */}
       {students.length > 0 ? (
-        <div className="bg-surface-container-lowest rounded-xl overflow-hidden">
-          <table className="w-full">
+        <div className="bg-surface-container-lowest rounded-xl overflow-x-auto">
+          <table className={`w-full ${hasGrades ? "min-w-[440px]" : "min-w-[360px]"}`}>
             <thead>
               <tr className="border-b border-outline-variant/30">
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-widest px-6 py-3 w-16">
+                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wide px-3 sm:px-6 py-3 w-12">
                   N.º
                 </th>
-                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-widest px-6 py-3">
+                <th className="text-left text-xs font-bold text-on-surface-variant uppercase tracking-wide px-3 sm:px-6 py-3">
                   Apellidos, Nombre
                 </th>
                 {hasGrades && (
-                  <th className="text-center text-xs font-bold text-on-surface-variant uppercase tracking-widest px-4 py-3 w-20">
+                  <th className="text-center text-xs font-bold text-on-surface-variant uppercase tracking-wide px-2 sm:px-4 py-3 w-16">
                     Nota
                   </th>
                 )}
-                <th className="text-right text-xs font-bold text-on-surface-variant uppercase tracking-widest px-6 py-3 w-24">
-                  Acciones
+                <th className="text-right text-xs font-bold text-on-surface-variant uppercase tracking-wide px-2 sm:px-6 py-3 w-16">
+                  <span className="hidden sm:inline">Acciones</span>
+                  <span className="sm:hidden">Acc.</span>
                 </th>
               </tr>
             </thead>
@@ -274,10 +275,10 @@ export function StudentActions({
                     key={student.id}
                     className="border-b border-outline-variant/10 last:border-0 hover:bg-surface-container transition-colors"
                   >
-                    <td className="px-6 py-4 text-sm font-medium text-on-surface-variant">
+                    <td className="px-3 sm:px-6 py-4 text-sm font-medium text-on-surface-variant">
                       {student.list_number || "—"}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-3 sm:px-6 py-4">
                       <span className="text-sm font-medium text-on-surface">
                         {student.first_surname}
                         {student.second_surname ? ` ${student.second_surname}` : ""}
@@ -290,7 +291,7 @@ export function StudentActions({
                       )}
                     </td>
                     {hasGrades && (
-                      <td className="px-4 py-4 text-center">
+                      <td className="px-2 sm:px-4 py-4 text-center">
                         {gradeInfo ? (
                           <a
                             href={`/resultados/${gradeInfo.correctionId}`}
@@ -315,7 +316,7 @@ export function StudentActions({
                         )}
                       </td>
                     )}
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-3 sm:px-6 py-4 text-right">
                       <div className="flex justify-end gap-1">
                         <button
                           onClick={() => openEditForm(student)}

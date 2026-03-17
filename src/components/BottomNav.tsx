@@ -19,7 +19,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant/10 px-1 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] min-h-[64px]">
       <div className="max-w-md mx-auto flex justify-around items-center">
         {navItems.map((item) => {
           const isActive =
@@ -31,19 +31,19 @@ export default function BottomNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center gap-1 group px-3 py-2 min-h-[48px] ${
+              className={`flex flex-col items-center justify-center gap-1 group px-1 py-2 min-h-[48px] flex-1 ${
                 isActive ? "text-primary" : "text-on-surface-variant hover:text-primary"
               } transition-colors`}
             >
               <div
-                className={`px-5 py-1 rounded-full transition-all ${
+                className={`px-3 py-1 rounded-full transition-all ${
                   isActive ? "bg-primary-fixed" : "bg-transparent"
                 }`}
               >
                 <item.Icon size={24} />
               </div>
               <span
-                className={`text-[11px] tracking-wide uppercase ${
+                className={`text-[10px] uppercase whitespace-nowrap text-center leading-tight ${
                   isActive ? "font-bold" : "font-medium"
                 }`}
               >
