@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { CriteriaPicker } from "@/components/CriteriaPicker";
 
@@ -178,41 +179,42 @@ export function ActivityActions({
           {activities.map((activity) => (
             <div
               key={activity.id}
-              className="bg-surface-container-lowest p-5 rounded-xl border-l-4 border-secondary hover:shadow-md transition-all"
+              className="bg-surface-container-lowest rounded-xl border-l-4 border-secondary hover:shadow-md transition-all relative"
             >
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h4 className="font-headline font-bold text-on-surface">{activity.title}</h4>
-                  {activity.description && (
-                    <p className="text-sm text-on-surface-variant mt-1">{activity.description}</p>
-                  )}
-                  {activity.criteria_codes.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      {activity.criteria_codes.map((code) => (
-                        <span
-                          key={code}
-                          className="text-xs font-medium px-2 py-0.5 bg-primary-fixed text-on-primary-fixed rounded-full"
-                        >
-                          {code}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="flex gap-1 ml-4">
-                  <button
-                    onClick={() => openEdit(activity)}
-                    className="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-xl">edit</span>
-                  </button>
-                  <button
-                    onClick={() => handleDelete(activity.id)}
-                    className="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-xl">delete</span>
-                  </button>
-                </div>
+              <Link
+                href={`/grupos/${groupId}/actividades/${activity.id}`}
+                className="block p-5 pr-20"
+              >
+                <h4 className="font-headline font-bold text-on-surface">{activity.title}</h4>
+                {activity.description && (
+                  <p className="text-sm text-on-surface-variant mt-1">{activity.description}</p>
+                )}
+                {activity.criteria_codes.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mt-2">
+                    {activity.criteria_codes.map((code) => (
+                      <span
+                        key={code}
+                        className="text-xs font-medium px-2 py-0.5 bg-primary-fixed text-on-primary-fixed rounded-full"
+                      >
+                        {code}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </Link>
+              <div className="absolute top-3 right-3 flex gap-1">
+                <button
+                  onClick={() => openEdit(activity)}
+                  className="p-2 text-on-surface-variant hover:text-primary hover:bg-primary-fixed rounded-lg transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">edit</span>
+                </button>
+                <button
+                  onClick={() => handleDelete(activity.id)}
+                  className="p-2 text-on-surface-variant hover:text-error hover:bg-error-container rounded-lg transition-colors"
+                >
+                  <span className="material-symbols-outlined text-xl">delete</span>
+                </button>
               </div>
             </div>
           ))}

@@ -63,6 +63,16 @@ const config: Config = {
           container: "#93000a",
         },
 
+        // Warning
+        warning: {
+          DEFAULT: "#e8870e",
+          container: "#ffefd6",
+        },
+        "on-warning": {
+          DEFAULT: "#ffffff",
+          container: "#5c3600",
+        },
+
         // Surface system
         surface: {
           DEFAULT: "#fbf9f5",

@@ -71,7 +71,7 @@ export default async function GlobalActivitiesPage() {
                 {(activitiesByGroup.get(group.id) || []).map((activity) => (
                   <Link
                     key={activity.id}
-                    href={`/grupos/${group.id}/actividades`}
+                    href={`/grupos/${group.id}/actividades/${activity.id}`}
                     className="flex items-center justify-between bg-surface-container-lowest p-4 rounded-xl hover:bg-surface-container transition-all group"
                   >
                     <div className="flex-1 min-w-0">
